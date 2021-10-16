@@ -28,14 +28,18 @@ const testScreen = ({navigation, route}) => {
   const {width} = Dimensions.get('window');
   const [currentQuestion, setcurrentQuestion] = useState(0);
   const [choiceSelected, setchoiceSelected] = useState([]);
+  const [choiceUnAnswered, setchoiceUnAnswered] = useState([]);
   const [value, setValue] = useState();
-  const [seconds, setseconds] = useState(timeOut*60);
+  const [value2, setValue2] = useState();
+  const [seconds, setseconds] = useState(timeOut * 60);
   const [secondsPlus, setsecondsPlus] = useState(0 * 60);
   const [showOvertimePlus, setshowOvertimePlus] = useState(false);
   const [showModalTimeOut, setshowModalTimeOut] = useState(true);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isConfirmExamVisible, setConfirmExamVisible] = useState(false);
   const [isIncompleteVisible, setIncompleteVisible] = useState(false);
+  const [showButtonSendExam, setshowButtonSendExam] = useState(false);
+  const [numberTest, setnumberTest] = useState();
 
   const findChoice = item => {
     let choice = null;
@@ -76,40 +80,6 @@ const testScreen = ({navigation, route}) => {
         ])
       : [(choiceSelected[checkSelected].choiceValue = choiceValue)];
   };
-
-  useEffect(() => {
-    findIndexChoice();
-  }, [choiceSelected, value, currentQuestion]);
-
-  useEffect(() => {
-    if (seconds !== 0) {
-      let interval = setInterval(() => {
-        setseconds(lastTimerCount => {
-          lastTimerCount <= 1 && clearInterval(interval);
-          return lastTimerCount - 1;
-        });
-      }, 1000);
-      return () => clearInterval(interval);
-    } else {
-      setTimeout(() => {
-        setModalVisible(showModalTimeOut ? !isModalVisible : false);
-      });
-    }
-  }, [seconds]);
-
-  useEffect(() => {
-    if (showOvertimePlus == true) {
-      if (secondsPlus >= 0) {
-        let interval2 = setInterval(() => {
-          setsecondsPlus(lastTimerCount2 => {
-            lastTimerCount2 >= 0 && clearInterval(interval2);
-            return lastTimerCount2 + 1;
-          });
-        }, 1000);
-        return () => clearInterval(interval2);
-      }
-    }
-  }, [secondsPlus, showOvertimePlus]);
 
   const SendExamHandler = async overTime => {
     if (overTime == 0) {
@@ -212,6 +182,77 @@ const testScreen = ({navigation, route}) => {
       setshowModalTimeOut(false);
     }
   };
+  const warpExam = async () => {
+    let test = [];
+    let yoyo = 0;
+    for (let k = 0; k < questionDetails.length; k++) {
+      //console.log(choiceSelected);
+      choiceSelected.sort((a, b) => (a.questionId > b.questionId ? 1 : -1));
+      let value = choiceSelected.splice(0, 1);
+      if (value != '') {
+        if (value[0].questionId !== k) {
+          choiceUnAnswered.push({choiceValue: false, questionId: k});
+          choiceSelected.unshift(value[0]);
+        } else {
+          test.push(value[0]);
+        }
+      } else {
+        choiceUnAnswered.push({choiceValue: false, questionId: k});
+      }
+    }
+    for (let k = 0; k < test.length; k++) {
+      choiceSelected.push(test[k]);
+    }
+    //console.log(choiceUnAnswered);
+    //console.log(choiceSelected)
+    if (choiceUnAnswered[0].choiceValue == false) {
+      //console.log(choiceUnAnswered[0].questionId);
+      setcurrentQuestion(choiceUnAnswered[0].questionId);
+      yoyo = choiceUnAnswered[1].questionId;
+      setnumberTest(yoyo);
+    }
+    setshowButtonSendExam(true);
+  };
+
+  useEffect(() => {
+    if (showButtonSendExam == true) {
+      warpExam();
+    }
+  }, [choiceUnAnswered, choiceSelected, numberTest]);
+
+  useEffect(() => {
+    findIndexChoice();
+  }, [choiceSelected, value, currentQuestion]);
+
+  useEffect(() => {
+    if (seconds !== 0) {
+      let interval = setInterval(() => {
+        setseconds(lastTimerCount => {
+          lastTimerCount <= 1 && clearInterval(interval);
+          return lastTimerCount - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setTimeout(() => {
+        setModalVisible(showModalTimeOut ? !isModalVisible : false);
+      });
+    }
+  }, [seconds]);
+
+  useEffect(() => {
+    if (showOvertimePlus == true) {
+      if (secondsPlus >= 0) {
+        let interval2 = setInterval(() => {
+          setsecondsPlus(lastTimerCount2 => {
+            lastTimerCount2 >= 0 && clearInterval(interval2);
+            return lastTimerCount2 + 1;
+          });
+        }, 1000);
+        return () => clearInterval(interval2);
+      }
+    }
+  }, [secondsPlus, showOvertimePlus]);
   useEffect(() => {
     if (questionDetails.length == 0) {
       Alert.alert('แจ้งเตือน', 'วิชาย่อยนี้ยังไม่มีข้อสอบ', [
@@ -283,8 +324,8 @@ const testScreen = ({navigation, route}) => {
                     </Text>
                   </View>
                 </View>
-                <View style={{justifyContent: 'center'}}>
-                  <ScrollView>
+                <ScrollView>
+                  <View style={{justifyContent: 'center'}}>
                     {questionDetails[currentQuestion] ? (
                       // questionDetails.map(item => {
                       //     return (
@@ -301,7 +342,9 @@ const testScreen = ({navigation, route}) => {
                           </Text>
                         </View>
                         {questionDetails[currentQuestion].examPicQuestion !==
-                        null ? (
+                          null &&
+                        questionDetails[currentQuestion].examPicQuestion !==
+                          '' ? (
                           <View style={{marginVertical: 5}}>
                             <ImageModal
                               resizeMode="contain"
@@ -328,8 +371,20 @@ const testScreen = ({navigation, route}) => {
                                       uncheckedColor="#ffb84e"
                                     />
                                     <TouchableOpacity
-                                      style={pageStyle.radioText}
-                                      onPress={() => selectChoice(choiceValue)}>
+                                      style={[
+                                        pageStyle.radioText,
+                                        value == undefined
+                                          ? pageStyle.noneActiveBg
+                                          : value == item.c1 ||
+                                            value == item.c2 ||
+                                            value == item.c3 ||
+                                            value == item.c4
+                                          ? pageStyle.activeBg
+                                          : pageStyle.noneActiveBg,
+                                      ]}
+                                      onPress={() => {
+                                        selectChoice(choiceValue);
+                                      }}>
                                       <Text
                                         style={[
                                           styles.textBold16,
@@ -346,61 +401,109 @@ const testScreen = ({navigation, route}) => {
                         </View>
                       </View>
                     ) : null}
-                  </ScrollView>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                {currentQuestion === 0 ? (
-                  <View />
-                ) : (
-                  <TouchableOpacity
-                    style={{marginTop: 10}}
-                    onPress={() => setcurrentQuestion(currentQuestion - 1)}>
-                    <View style={[pageStyle.buttonNB]}>
-                      <FontAwesome5Icon
-                        name="chevron-left"
-                        size={18}
-                        color="#0036F3D9"
-                      />
-                      <Text
-                        style={[styles.textMedium16, pageStyle.textbuttonNB]}>
-                        ก่อนหน้า
-                      </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    {currentQuestion === 0 ? (
+                      <View />
+                    ) : (
+                      <TouchableOpacity
+                        style={{marginTop: 10}}
+                        onPress={() => setcurrentQuestion(currentQuestion - 1)}>
+                        <View style={[pageStyle.buttonNB]}>
+                          <FontAwesome5Icon
+                            name="chevron-left"
+                            size={18}
+                            color="#0036F3D9"
+                          />
+                          <Text
+                            style={[
+                              styles.textMedium16,
+                              pageStyle.textbuttonNB,
+                            ]}>
+                            ก่อนหน้า
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                    
+                    {currentQuestion === questionDetails.length - 1 ? (
+                      <TouchableOpacity
+                        style={{marginTop: 10}}
+                        onPress={() => SendExamHandler(0)}>
+                        <View style={[pageStyle.buttonNB]}>
+                          <Text
+                            style={[
+                              styles.textMedium16,
+                              pageStyle.textbuttonNB,
+                            ]}>
+                            ส่งคำตอบ
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        style={{marginTop: 10}}
+                        onPress={() => setcurrentQuestion(currentQuestion + 1)}>
+                        <View style={[pageStyle.buttonNB]}>
+                          <Text
+                            style={[
+                              styles.textMedium16,
+                              pageStyle.textbuttonNB,
+                            ]}>
+                            ข้อถัดไป
+                          </Text>
+                          <FontAwesome5Icon
+                            name="chevron-right"
+                            size={18}
+                            color="#0036F3D9"
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                  {choiceSelected.length !== questionDetails.length ? (
+                    showButtonSendExam ? (
+                      <View style={{alignItems: 'center'}}>
+                        <TouchableOpacity
+                          style={{marginTop: 10}}
+                          onPress={() => {
+                            warpExam();
+                            setchoiceUnAnswered([]);
+                          }}>
+                          <View style={[pageStyle.buttonUnAnswered]}>
+                            <Text
+                              style={[
+                                styles.textMedium16,
+                                pageStyle.textbuttonNB,
+                              ]}>
+                              กดเพื่อไปข้อที่ยังไม่ได้ทำ
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    ) : null
+                  ) : (
+                    <View style={{alignItems: 'center'}}>
+                      <TouchableOpacity
+                        style={{marginTop: 10}}
+                        onPress={() => SendExamHandler(0)}>
+                        <View style={[pageStyle.buttonNB]}>
+                          <Text
+                            style={[
+                              styles.textMedium16,
+                              pageStyle.textbuttonNB,
+                            ]}>
+                            ส่งคำตอบ
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
-                )}
-                {currentQuestion === questionDetails.length - 1 ? (
-                  <TouchableOpacity
-                    style={{marginTop: 10}}
-                    onPress={() => SendExamHandler(0)}>
-                    <View style={[pageStyle.buttonNB]}>
-                      <Text
-                        style={[styles.textMedium16, pageStyle.textbuttonNB]}>
-                        ส่งคำตอบ
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={{marginTop: 10}}
-                    onPress={() => setcurrentQuestion(currentQuestion + 1)}>
-                    <View style={[pageStyle.buttonNB]}>
-                      <Text
-                        style={[styles.textMedium16, pageStyle.textbuttonNB]}>
-                        ข้อถัดไป
-                      </Text>
-                      <FontAwesome5Icon
-                        name="chevron-right"
-                        size={18}
-                        color="#0036F3D9"
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )}
+                  )}
+                </ScrollView>
               </View>
             </View>
           </View>
@@ -531,7 +634,11 @@ const testScreen = ({navigation, route}) => {
               </Text>
               <TouchableOpacity
                 style={{alignItems: 'center', padding: 10}}
-                onPress={() => setIncompleteVisible(false)}>
+                onPress={() => {
+                  setIncompleteVisible(false);
+                  warpExam();
+                  setchoiceUnAnswered([]);
+                }}>
                 <Text style={[styles.textLight18, pageStyle.warningBT]}>
                   ยืนยัน
                 </Text>
@@ -565,7 +672,6 @@ const pageStyle = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     borderColor: '#ffb84e',
-    backgroundColor: '#fff',
   },
   textEtc: {
     margin: 5,
@@ -600,6 +706,17 @@ const pageStyle = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     width: 110,
+    borderColor: '#264ddb',
+    backgroundColor: '#ffd84e',
+  },
+  buttonUnAnswered: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 5,
+    borderRadius: 20,
+    borderWidth: 1,
+    width: 200,
+    height: 50,
     borderColor: '#264ddb',
     backgroundColor: '#ffd84e',
   },
@@ -685,6 +802,12 @@ const pageStyle = StyleSheet.create({
     width: 100,
     textAlignVertical: 'center',
     textAlign: 'center',
+  },
+  activeBg: {
+    backgroundColor: '#ffb84e',
+  },
+  noneActiveBg: {
+    backgroundColor: '#fff',
   },
 });
 

@@ -138,8 +138,7 @@ const optionTestScreen = ({navigation, route}) => {
           <Text
             numberOfLines={1}
             style={[styles.textMedium20, {flex: 1, color: '#FFFFFF'}]}>
-            {csgName}
-            {console.log(subid)}
+            {csgName}            
           </Text>
           <Text
             style={[

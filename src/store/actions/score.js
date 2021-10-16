@@ -6,7 +6,6 @@ export const Get_Ranking = 'Get_Ranking';
 
 export const sendScore = (csgId, level, questionCount, correctAnswerCount, rankingScore, timeUsed) => {
    return async (dispatch, getState) => {
-     console.log(csgId,level,questionCount,correctAnswerCount,rankingScore,timeUsed);
       const user = await AsyncStorage.getItem('user');
       const res = await fetch(
          sendReport(), {
