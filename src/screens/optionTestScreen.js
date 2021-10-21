@@ -20,6 +20,7 @@ import * as levelTestActions from '../store/actions/levelTest';
 
 const optionTestScreen = ({navigation, route}) => {
   const {subid, gradeid, csgName} = route.params;
+  const from = route.params.from;
   const [questionSelected, setquestionSelected] = useState(0);
   const [levelSelected, setlevelSelected] = useState(0);
   const [timeOut, settimeOut] = useState('-');
@@ -27,6 +28,21 @@ const optionTestScreen = ({navigation, route}) => {
   const [showLevel, setshowLevel] = useState(true);
 
   const dispatch = useDispatch();
+  from === 'scoreScreen' || from === 'rankingScreen' ? // clear stack ถ้ามาจากหน้า score หรือ ranking
+    navigation.reset({
+      index: 1,
+      routes: [
+        { name: 'home' },
+        {
+          name: 'optionTest',
+          params: {
+            subid: subid,
+            gradeid: gradeid,
+            csgName: csgName,
+          },
+        }],
+    })
+    : null
   useEffect(() => {}, []);
 
   const ContainerContent = () => {

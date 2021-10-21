@@ -787,6 +787,7 @@ const scoreScreen = ({navigation, route}) => {
                             subid: csgId,
                             gradeid: gradeId,
                             csgName: csgName,
+                            from: 'scoreScreen',
                           })
                         }>
                         <Text
