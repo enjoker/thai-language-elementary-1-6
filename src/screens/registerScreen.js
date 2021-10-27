@@ -34,14 +34,9 @@ const registerScreen = ({ navigation }) => {
   const ContainerContent = () => {
     const [name, setname] = useState();
     const dispatch = useDispatch();
+
     useEffect(() => { }, [name]);
-    const register = async () => {
-      try {
-        dispatch(userActions.addUser(name));
-      } catch (error) {
-        console.log(error);
-      }
-    };
+
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Image
@@ -88,7 +83,7 @@ const registerScreen = ({ navigation }) => {
               width: 100,
             },
           ]}
-          onPress={register}>
+          onPress={() => navigation.navigate('advert', { username: name })}>
           ตกลง
         </Text>
       </View>
