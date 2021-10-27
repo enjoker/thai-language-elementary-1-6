@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity,StyleSheet} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Image,
   Icon,
@@ -49,11 +49,11 @@ const Navigator = () => {
 
   const AdvertModal = () => {
     return (
-      <View style={{flex: 1, justifyContent: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <View
           style={[
             styles.boxOvertime,
-            {backgroundColor: '#1FA246', borderRadius: 15},
+            { backgroundColor: '#1FA246', borderRadius: 15 },
           ]}>
           <Text
             style={[
@@ -67,7 +67,7 @@ const Navigator = () => {
             ]}>
             ท่านมีสิทธื์ในการดูเฉลยจำนวน
           </Text>
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Text
               style={[
                 styles.textRegular30,
@@ -101,7 +101,7 @@ const Navigator = () => {
               marginBottom: 5,
             }}>
             <TouchableOpacity
-              style={{alignItems: 'center'}}
+              style={{ alignItems: 'center' }}
               onPress={() => {
                 setModalVisible(false);
               }}>
@@ -110,7 +110,7 @@ const Navigator = () => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{alignItems: 'center'}}
+              style={{ alignItems: 'center' }}
               onPress={() => {
                 setModalVisible(false);
                 setprivilegeAmount(privilegeAmount + 1);
@@ -178,20 +178,20 @@ const Navigator = () => {
 
   const MainLogo = () => {
     return (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Image
           source={require('../assets/images/SchooltestLogo.png')}
-          style={{width: 34, height: 24}}
+          style={{ width: 34, height: 24 }}
         />
         <Text
-          style={[styles.textMedium16, {marginHorizontal: 5, color: '#555'}]}>
+          style={[styles.textMedium16, { marginHorizontal: 5, color: '#555' }]}>
           School Test Lite
         </Text>
       </View>
     );
   };
 
-  const clearStackOptions = ({navigation}) => ({
+  const clearStackOptions = ({ navigation }) => ({
     title: '',
     headerLeft: () => {
       return <MainLogo />;
@@ -205,21 +205,21 @@ const Navigator = () => {
     },
   });
 
-  const screenOptions = ({navigation}) => ({
+  const screenOptions = ({ navigation }) => ({
     headerTitle: () => {
       return <MainLogo />;
     },
     headerRight: () => {
       return (
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity
-            style={{marginLeft: 10}}
+            style={{ marginLeft: 10 }}
             onPress={() => setModalVisible(!ModalVisible)}>
             <AdvertIcon width={26} height={26} />
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{marginLeft: 10}}
+            style={{ marginLeft: 10 }}
             onPress={() => navigation.popToTop()}>
             <HomeIcon width={26} height={26} />
           </TouchableOpacity>
@@ -228,7 +228,7 @@ const Navigator = () => {
     },
   });
 
-  const screenRename = ({navigation}) => ({
+  const screenRename = ({ navigation }) => ({
     headerTitle: () => {
       return <MainLogo />;
     },
@@ -241,28 +241,24 @@ const Navigator = () => {
     },
   });
 
-  const AppNavigator = ({navigation}) => {
+  const AppNavigator = ({ navigation }) => {
     return (
       <Stack.Navigator>
         {checkUser === null && loadingUser === false ? (
-          <Stack.Screen
-            name="register"
-            component={registerScreen}
-            options={{headerShown: false}}
-          />
-        ) : checkUser !== null && loadingUser === false ? (
           <>
-            
+            <Stack.Screen
+              name="register"
+              component={registerScreen}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="advert"
               component={advertScreen}
-              options={{
-                headerTitle: () => {
-                  return <MainLogo />;
-                },
-              }}
+              options={{ headerShown: false }}
             />
-            
+          </>
+        ) : checkUser !== null && loadingUser === false ? (
+          <>
             <Stack.Screen
               name="home"
               component={homeScreen}
@@ -303,7 +299,7 @@ const Navigator = () => {
           <Stack.Screen
             name="loading"
             component={loadingScreen}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
         )}
       </Stack.Navigator>
