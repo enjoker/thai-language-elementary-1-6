@@ -24,6 +24,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as userActions from '../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
+import { BannerAd, BannerAdSize } from '@react-native-admob/admob';
 
 // import รูปบ้าน
 import HomeIcon from '../assets/images/icons/HomeIcon.svg';
@@ -102,9 +103,11 @@ const registerScreen = ({ navigation }) => {
           <ContainerContent />
         </View>
       </View>
-      <View style={{ backgroundColor: '#EEEEEE', height: 50, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Ads Area</Text>
-      </View>
+        <BannerAd
+          size={BannerAdSize.ADAPTIVE_BANNER}
+          unitId={'ca-app-pub-3940256099942544/6300978111'}
+          onAdFailedToLoad={(error) => console.error(error)}
+        />
     </SafeAreaView>
   );
 };
