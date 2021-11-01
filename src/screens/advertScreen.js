@@ -24,10 +24,24 @@ import HomeIcon from '../assets/images/icons/HomeIcon.svg';
 import AdvertIcon from '../assets/images/icons/Vector.svg';
 import Advert2Icon from '../assets/images/icons/Vector2.svg';
 
+import { useRewardedAd } from '@react-native-admob/admob';
+
+const hookOptions = {
+  loadOnDismissed: true,
+  requestOptions: {
+    requestNonPersonalizedAdsOnly: true,
+  },
+};
 
 const advertScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { username } = route.params;
+  const {
+    adLoadError,
+    adLoaded,
+    reward,
+    show
+  } = useRewardedAd('ca-app-pub-3940256099942544/5224354917', hookOptions);
 
   const register = async () => {
     try {
@@ -36,6 +50,18 @@ const advertScreen = ({ navigation, route }) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (adLoadError) {
+      console.error(adLoadError);
+    }
+  }, [adLoadError]);
+
+  useEffect(() => {
+    if (reward) {
+      console.log(`Reward Earned: ${reward.type}`);
+    }
+  }, [reward]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -59,6 +85,7 @@ const advertScreen = ({ navigation, route }) => {
               <Text style={[styles.textMedium40, { textAlign: 'center', color: '#333333' }]}>5</Text>
             </View>
             <TouchableOpacity
+            onPress={()=>show()}
               style={{
                 alignItems: 'center',
                 padding: 10,
@@ -94,6 +121,7 @@ const advertScreen = ({ navigation, route }) => {
                 ไปหน้าหลัก
               </Text>
             </TouchableOpacity>
+            
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Text
                 style={[
