@@ -18,7 +18,7 @@ import { Input } from 'react-native-elements';
 import { FlatGrid } from 'react-native-super-grid';
 import { getCoures } from '../functions/functions';
 import * as userActions from '../store/actions/user';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import รูปบ้าน
 import HomeIcon from '../assets/images/icons/HomeIcon.svg';
 import AdvertIcon from '../assets/images/icons/Vector.svg';
@@ -35,6 +35,7 @@ const hookOptions = {
 
 const advertScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
+  const [privilege, setprivilege] = useState();
   const { username } = route.params;
   const {
     adLoadError,
@@ -60,8 +61,30 @@ const advertScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (reward) {
       console.log(`Reward Earned: ${reward.type}`);
+      savePrivilege();
     }
   }, [reward]);
+
+  const savePrivilege = async () => {
+    let sumPrivilege;
+    let test;
+    sumPrivilege = parseInt(privilege) + 2
+    test = sumPrivilege.toString();
+    setprivilege(test)
+    await AsyncStorage.setItem('privilege', privilege);
+  }
+  useEffect(() => {
+    const getPrivilege = async () => {
+      try {
+        const currentPrivilege = await AsyncStorage.getItem('privilege')
+        setprivilege(currentPrivilege)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getPrivilege()
+  }, [])
+  console.log(privilege);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -82,10 +105,10 @@ const advertScreen = ({ navigation, route }) => {
               ท่านได้รับสิทธิ์ดูเฉลยคำตอบจำนวน
             </Text>
             <View style={{ margin: 5 }}>
-              <Text style={[styles.textMedium40, { textAlign: 'center', color: '#333333' }]}>5</Text>
+              <Text style={[styles.textMedium40, { textAlign: 'center', color: '#333333' }]}>{privilege}</Text>
             </View>
             <TouchableOpacity
-            onPress={()=>show()}
+              onPress={() => show()}
               style={{
                 alignItems: 'center',
                 padding: 10,
@@ -121,7 +144,7 @@ const advertScreen = ({ navigation, route }) => {
                 ไปหน้าหลัก
               </Text>
             </TouchableOpacity>
-            
+
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Text
                 style={[

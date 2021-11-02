@@ -117,7 +117,7 @@ const testScreen = ({navigation, route}) => {
                   questionCount: questionDetails.length,
                   level: level,
                   timeLeft: seconds,
-                  timeOut: timeOut * 60,
+                  timeOut: timeOut,
                   choiceSelected: choiceSelected,
                   gradeName: gradeName,
                   csgId: csgId,
@@ -141,7 +141,7 @@ const testScreen = ({navigation, route}) => {
                   questionCount: questionDetails.length,
                   level: level,
                   timeLeft: seconds,
-                  timeOut: timeOut * 60,
+                  timeOut: timeOut,
                   choiceSelected: choiceSelected,
                   gradeName: gradeName,
                   csgId: csgId,
@@ -166,7 +166,7 @@ const testScreen = ({navigation, route}) => {
                 questionCount: questionDetails.length,
                 level: level,
                 timeLeft: seconds,
-                timeOut: timeOut * 60,
+                timeOut: timeOut,
                 choiceSelected: choiceSelected,
                 gradeName: gradeName,
                 csgId: csgId,
@@ -400,6 +400,44 @@ const testScreen = ({navigation, route}) => {
                       </View>
                     ) : null}
                   </View>
+                  {choiceSelected.length !== questionDetails.length ? (
+                    showButtonSendExam ? (
+                      <View style={{alignItems: 'center'}}>
+                        <TouchableOpacity
+                          style={{marginTop: 10}}
+                          onPress={() => {
+                            warpExam();
+                            setchoiceUnAnswered([]);
+                          }}>
+                          <View style={[pageStyle.buttonUnAnswered]}>
+                            <Text
+                              style={[
+                                styles.textMedium16,
+                                pageStyle.textbuttonNB,
+                              ]}>
+                              กดเพื่อไปข้อที่ยังไม่ได้ทำ
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    ) : null
+                  ) : showButtonSendExam ? (
+                    <View style={{alignItems: 'center'}}>
+                      <TouchableOpacity
+                        style={{marginTop: 10}}
+                        onPress={() => SendExamHandler(0)}>
+                        <View style={[pageStyle.buttonNB]}>
+                          <Text
+                            style={[
+                              styles.textMedium16,
+                              pageStyle.textbuttonNB,
+                            ]}>
+                            ส่งคำตอบ
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  ) : null}
                   <View
                     style={{
                       flexDirection: 'row',
@@ -462,45 +500,7 @@ const testScreen = ({navigation, route}) => {
                         </View>
                       </TouchableOpacity>
                     )}
-                  </View>
-                  {choiceSelected.length !== questionDetails.length ? (
-                    showButtonSendExam ? (
-                      <View style={{alignItems: 'center'}}>
-                        <TouchableOpacity
-                          style={{marginTop: 10}}
-                          onPress={() => {
-                            warpExam();
-                            setchoiceUnAnswered([]);
-                          }}>
-                          <View style={[pageStyle.buttonUnAnswered]}>
-                            <Text
-                              style={[
-                                styles.textMedium16,
-                                pageStyle.textbuttonNB,
-                              ]}>
-                              กดเพื่อไปข้อที่ยังไม่ได้ทำ
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    ) : null
-                  ) : showButtonSendExam ? (
-                    <View style={{alignItems: 'center'}}>
-                      <TouchableOpacity
-                        style={{marginTop: 10}}
-                        onPress={() => SendExamHandler(0)}>
-                        <View style={[pageStyle.buttonNB]}>
-                          <Text
-                            style={[
-                              styles.textMedium16,
-                              pageStyle.textbuttonNB,
-                            ]}>
-                            ส่งคำตอบ
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  ) : null}
+                  </View>                  
                 </ScrollView>
               </View>
             </View>

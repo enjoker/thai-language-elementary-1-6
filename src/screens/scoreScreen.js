@@ -16,6 +16,7 @@ import {
 import styles from '../styles/style';
 import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
+import { CommonActions } from '@react-navigation/native';
 
 // import Actions
 import * as scoreActions from '../store/actions/score';
@@ -72,8 +73,7 @@ const scoreScreen = ({navigation, route}) => {
     const levelBonus =
       level === 1 ? 1 : level === 3 ? 1.1 : level === 4 ? 1.2 : null;
     if (
-      correctAnswerCount >= (questionCount * 80) / 100 &&
-      overTimePlus == 0
+      correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0
     ) {
       rankingScore =
         Math.round(
@@ -148,9 +148,7 @@ const scoreScreen = ({navigation, route}) => {
   }, [level]);
   useEffect(() => {
     if (
-      correctAnswerCount >= (questionCount * 60) / 100 &&
-      timeUsed >= (timeOut * 30) / 100 &&
-      overTimePlus == 0
+      correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0
     ) {
       setsumScore(
         Math.round(
@@ -534,12 +532,8 @@ const scoreScreen = ({navigation, route}) => {
                           แต้ม
                         </Text>
                       </View>
-                      {(correctAnswerCount >= (questionCount * 60) / 100 &&
-                        timeUsed >= (timeOut * 30) / 100 &&
-                        overTimePlus == 0) ||
-                      (correctAnswerCount <= questionCount &&
-                        timeUsed >= (timeOut * 30) / 100 &&
-                        overTimePlus > 0) ? (
+                      {(correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0) ||
+                        (correctAnswerCount <= questionCount && overTimePlus > 0) ?  (
                         <View>
                           <View
                             style={{
@@ -781,14 +775,24 @@ const scoreScreen = ({navigation, route}) => {
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={{alignItems: 'center', marginTop: 10}}
+                        style={{ alignItems: 'center', marginTop: 10 }}
                         onPress={() =>
-                          navigation.navigate('optionTest', {
-                            subid: csgId,
-                            gradeid: gradeId,
-                            csgName: csgName,
-                            from: 'scoreScreen',
-                          })
+                          navigation.dispatch(
+                            CommonActions.reset({
+                              index: 1,
+                              routes: [
+                                { name: 'home' },
+                                {
+                                  name: 'optionTest',
+                                  params: {
+                                    subid: csgId,
+                                    gradeid: gradeId,
+                                    csgName: csgName,
+                                  },
+                                },
+                              ],
+                            }),
+                          )
                         }>
                         <Text
                           style={[

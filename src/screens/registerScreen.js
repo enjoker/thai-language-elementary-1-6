@@ -35,9 +35,19 @@ const registerScreen = ({ navigation }) => {
 
   const ContainerContent = () => {
     const [name, setname] = useState();
+    const [privilege, setprivilege] = useState('30');
     const dispatch = useDispatch();
 
-    useEffect(() => { }, [name]);
+    const advertPrivilege = async userName => {
+      console.log(privilege);
+      try {
+        dispatch(userActions.addPrivilege(privilege));
+      } catch (error) {
+        console.log(error);
+      }
+      navigation.navigate('advert', { username: userName })
+    };
+    useEffect(() => { }, [name, privilege]);
 
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -85,7 +95,7 @@ const registerScreen = ({ navigation }) => {
               width: 100,
             },
           ]}
-          onPress={() => navigation.navigate('advert', { username: name })}>
+          onPress={() => advertPrivilege(name)}>
           ตกลง
         </Text>
       </View>
@@ -104,7 +114,7 @@ const registerScreen = ({ navigation }) => {
           <ContainerContent />
         </View>
       </View>
-        <BannerAds/>
+      <BannerAds />
     </SafeAreaView>
   );
 };
