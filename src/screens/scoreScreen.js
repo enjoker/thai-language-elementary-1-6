@@ -16,10 +16,20 @@ import {
 import styles from '../styles/style';
 import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
-import { CommonActions } from '@react-navigation/native';
-
+import {CommonActions} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import Ads
+import BannerAds from '../components/bannerAds';
+import {useRewardedAd} from '@react-native-admob/admob';
 // import Actions
 import * as scoreActions from '../store/actions/score';
+
+const hookOptions = {
+  loadOnDismissed: true,
+  requestOptions: {
+    requestNonPersonalizedAdsOnly: true,
+  },
+};
 
 const scoreScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -35,6 +45,9 @@ const scoreScreen = ({navigation, route}) => {
     csgName,
     gradeId,
     overTimePlus,
+    timeTestEasy,
+    timeTestMedium,
+    timeTestHard,
   } = route.params;
   const timeUsed = timeOut - timeLeft + overTimePlus;
   const timePlus = timeLeft - overTimePlus;
@@ -47,7 +60,58 @@ const scoreScreen = ({navigation, route}) => {
   const [showDetailScore, setshowDetailScore] = useState(false);
   const [scoreLevel, setscoreLevel] = useState(0);
   const [sumScore, setsumScore] = useState(0);
-  const [newChoiceSelected, setnewChoiceSelected] = useState(choiceSelected);
+  const [privilege, setprivilege] = useState();
+  const {adLoadError, adLoaded, reward, show} = useRewardedAd(
+    'ca-app-pub-3940256099942544/5224354917',
+    hookOptions,
+  );
+
+  useEffect(() => {
+    if (adLoadError) {
+      console.error(adLoadError);
+    }
+  }, [adLoadError]);
+
+  useEffect(() => {
+    if (reward) {
+      console.log(`Reward Earned: ${reward.type}`);
+      savePrivilege();
+    }
+  }, [reward]);
+
+  const savePrivilege = async () => {
+    let sumPrivilege;
+    let test;
+    sumPrivilege = parseInt(privilege) + 2;
+    test = sumPrivilege.toString();
+    setprivilege(test);
+    await AsyncStorage.setItem('privilege', privilege);
+    console.log('สิทธิ์ที่เพิ่ม' + privilege);
+  };
+  const usePrivilege = async () => {
+    let sumPrivilege;
+    let test;
+    sumPrivilege = parseInt(privilege) - 1;
+    test = sumPrivilege.toString();
+    setprivilege(test);
+    await AsyncStorage.setItem('privilege', privilege);
+    console.log('ข้างในสิทธิ์ที่ถูกลบ' + privilege);
+  }; 
+  console.log('ข้างนอกสิทธิ์ที่ถูกลบ' + privilege);
+
+  useEffect(() => {
+    const getPrivilege = async () => {
+      try {
+        const currentPrivilege = await AsyncStorage.getItem('privilege');
+        setprivilege(currentPrivilege);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getPrivilege();
+  }, []);
+  console.log(privilege);
+  useEffect(() => {}, [privilege]);
 
   let correctAnswerCount = 0;
   let wrongAnswerCount = 0;
@@ -59,22 +123,30 @@ const scoreScreen = ({navigation, route}) => {
           correctAnswerCount += 1;
         } else if (choiceSelected[index].choiceValue !== 'หมดเวลา') {
           wrongAnswerCount += 1;
-        }        
+        }
       })
     : null;
 
-  const toggleModal = (index, answerResult) => {
-    setselectedQuestion({index, answerResult});
-    setmodalVisible(!ModalVisible);
+  const toggleModal = (index, answerResult, status) => {
+    if (privilege != '0') {
+      if (status == true) {
+        setselectedQuestion({index, answerResult});
+        setmodalVisible(!ModalVisible);
+      } else {
+        setselectedQuestion({index, answerResult});
+        setmodalVisible(!ModalVisible);
+        usePrivilege();
+      }
+    } else {
+      console.log('disable');
+    }
   };
 
   const sendScore = useCallback(() => {
     let rankingScore = 0;
     const levelBonus =
       level === 1 ? 1 : level === 3 ? 1.1 : level === 4 ? 1.2 : null;
-    if (
-      correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0
-    ) {
+    if (correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0) {
       rankingScore =
         Math.round(
           (Math.round(correctAnswerCount * levelBonus * 1000) / 1000 +
@@ -127,16 +199,13 @@ const scoreScreen = ({navigation, route}) => {
 
   useEffect(() => {
     if (
-      csgName == 'สอบปลายภาคเรียน' ||
-      csgName == 'สอบปลายภาคเรียนที่ 1' ||
-      csgName == 'สอบปลายภาคเรียนที่ 2' ||
-      csgName == 'ภาษาไทย-สอบปลายภาคเรียน' ||
-      csgName == 'ภาษาไทย-สอบปลายภาคเรียนที่ 1' ||
-      csgName == 'ภาษาไทย-สอบปลายภาคเรียนที่ 2'
+      timeTestEasy == null &&
+      timeTestMedium !== null &&
+      timeTestHard == null
     ) {
       setshowLevel(false);
     }
-  }, [csgName]);
+  }, []);
   useEffect(() => {
     if (level == 1) {
       setscoreLevel(1);
@@ -147,9 +216,7 @@ const scoreScreen = ({navigation, route}) => {
     }
   }, [level]);
   useEffect(() => {
-    if (
-      correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0
-    ) {
+    if (correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0) {
       setsumScore(
         Math.round(
           (Math.round(correctAnswerCount * scoreLevel * 1000) / 1000 +
@@ -532,8 +599,10 @@ const scoreScreen = ({navigation, route}) => {
                           แต้ม
                         </Text>
                       </View>
-                      {(correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0) ||
-                        (correctAnswerCount <= questionCount && overTimePlus > 0) ?  (
+                      {(correctAnswerCount >= (questionCount * 80) / 100 &&
+                        overTimePlus == 0) ||
+                      (correctAnswerCount <= questionCount &&
+                        overTimePlus > 0) ? (
                         <View>
                           <View
                             style={{
@@ -683,22 +752,41 @@ const scoreScreen = ({navigation, route}) => {
                                     </Text>
                                   </View>
                                   <View style={{flexDirection: 'row'}}>
-                                    <TouchableOpacity
-                                      onPress={() =>
-                                        toggleModal(index, checkAnswer)
-                                      }>
-                                      {/* <TouchableOpacity onPress={checkAnswer ? toggleCorrectModal : toggleWrongModal}> */}
-                                      <Text
-                                        style={[
-                                          styles.textMedium16,
-                                          {fontWeight: 'bold'},
-                                          checkAnswer
-                                            ? pageStyle.trueColor
-                                            : checkColorTimeOut,
-                                        ]}>
-                                        {checkAnswer ? 'ดูคำถาม' : 'ดูเฉลย'}
-                                      </Text>
-                                    </TouchableOpacity>
+                                    {checkAnswer ? (
+                                      <TouchableOpacity
+                                        onPress={() =>
+                                          toggleModal(index, checkAnswer, true)
+                                        }>
+                                        {/* <TouchableOpacity onPress={checkAnswer ? toggleCorrectModal : toggleWrongModal}> */}
+                                        <Text
+                                          style={[
+                                            styles.textMedium16,
+                                            {fontWeight: 'bold'},
+                                            checkAnswer
+                                              ? pageStyle.trueColor
+                                              : checkColorTimeOut,
+                                          ]}>
+                                          ดูคำถาม
+                                        </Text>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <TouchableOpacity
+                                        onPress={() =>
+                                          toggleModal(index, checkAnswer, false)
+                                        }>
+                                        {/* <TouchableOpacity onPress={checkAnswer ? toggleCorrectModal : toggleWrongModal}> */}
+                                        <Text
+                                          style={[
+                                            styles.textMedium16,
+                                            {fontWeight: 'bold'},
+                                            checkAnswer
+                                              ? pageStyle.trueColor
+                                              : checkColorTimeOut,
+                                          ]}>
+                                          ดูเฉลย
+                                        </Text>
+                                      </TouchableOpacity>
+                                    )}
                                   </View>
                                 </View>
                               );
@@ -775,13 +863,13 @@ const scoreScreen = ({navigation, route}) => {
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={{ alignItems: 'center', marginTop: 10 }}
+                        style={{alignItems: 'center', marginTop: 10}}
                         onPress={() =>
                           navigation.dispatch(
                             CommonActions.reset({
                               index: 1,
                               routes: [
-                                { name: 'home' },
+                                {name: 'home'},
                                 {
                                   name: 'optionTest',
                                   params: {
@@ -826,15 +914,7 @@ const scoreScreen = ({navigation, route}) => {
           </View>
         </View>
       </ImageBackground>
-      <View
-        style={{
-          backgroundColor: '#EEEEEE',
-          height: 50,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>Ads Area</Text>
-      </View>
+      <BannerAds />
     </SafeAreaView>
   );
 };

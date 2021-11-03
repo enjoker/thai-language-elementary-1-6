@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   Image,
   Icon,
@@ -38,22 +38,80 @@ import scoreScreen from '../screens/scoreScreen';
 import rankingScreen from '../screens/rankingScreen';
 import advertScreen from '../screens/advertScreen';
 
+import {useRewardedAd} from '@react-native-admob/admob';
+
+const hookOptions = {
+  loadOnDismissed: true,
+  requestOptions: {
+    requestNonPersonalizedAdsOnly: true,
+  },
+};
 
 const Navigator = () => {
   const dispatch = useDispatch();
   const checkUser = useSelector(state => state.user.userName);
   const loadingUser = useSelector(state => state.user.loadingUser);
   const Stack = createNativeStackNavigator();
-  const [privilegeAmount, setprivilegeAmount] = useState(0);
   const [ModalVisible, setModalVisible] = useState(false);
+  const [privilege, setprivilege] = useState();
+  const {adLoadError, adLoaded, reward, show} = useRewardedAd(
+    'ca-app-pub-3940256099942544/5224354917',
+    hookOptions,
+  );
+  useEffect(() => {
+    if (adLoadError) {
+      console.error(adLoadError);
+    }
+  }, [adLoadError]);
+
+  useEffect(() => {
+    if (reward) {
+      console.log(`Reward Earned: ${reward.type}`);
+      savePrivilege();
+    }
+  }, [reward]);
+
+  const savePrivilege = async () => {
+    let sumPrivilege;
+    let test;
+    sumPrivilege = parseInt(privilege) + 2;
+    test = sumPrivilege.toString();
+    setprivilege(test);
+    await AsyncStorage.setItem('privilege', privilege);
+  };
+  useEffect(() => {
+    const getPrivilege = async () => {
+      try {
+        const currentPrivilege = await AsyncStorage.getItem('privilege');
+        setprivilege(currentPrivilege);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getPrivilege();
+  }, []);
+  console.log(privilege);
+  useEffect(() => {}, [privilege]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        dispatch(userActions.getUser());
+        //await AsyncStorage.removeItem('user')
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUser();
+  }, []);
 
   const AdvertModal = () => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>
+      <View style={{flex: 1, justifyContent: 'center'}}>
         <View
           style={[
             styles.boxOvertime,
-            { backgroundColor: '#1FA246', borderRadius: 15 },
+            {backgroundColor: '#1FA246', borderRadius: 15},
           ]}>
           <Text
             style={[
@@ -67,7 +125,7 @@ const Navigator = () => {
             ]}>
             ท่านมีสิทธื์ในการดูเฉลยจำนวน
           </Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <Text
               style={[
                 styles.textRegular30,
@@ -78,7 +136,7 @@ const Navigator = () => {
                   marginHorizontal: 5,
                 },
               ]}>
-              {privilegeAmount}
+              {privilege}
             </Text>
             <Text
               style={[
@@ -101,7 +159,7 @@ const Navigator = () => {
               marginBottom: 5,
             }}>
             <TouchableOpacity
-              style={{ alignItems: 'center' }}
+              style={{alignItems: 'center'}}
               onPress={() => {
                 setModalVisible(false);
               }}>
@@ -110,11 +168,8 @@ const Navigator = () => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ alignItems: 'center' }}
-              onPress={() => {
-                setModalVisible(false);
-                setprivilegeAmount(privilegeAmount + 1);
-              }}>
+              style={{alignItems: 'center'}}
+              onPress={() => show()}>
               <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
                 กดดูโฆษณาเพื่อรับสิทธิ์เพิ่ม
               </Text>
@@ -164,62 +219,36 @@ const Navigator = () => {
       </View>
     );
   };
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        dispatch(userActions.getUser());
-       //await AsyncStorage.removeItem('user')
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getUser();
-  }, []);
-
   const MainLogo = () => {
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
           source={require('../assets/images/SchooltestLogo.png')}
-          style={{ width: 34, height: 24 }}
+          style={{width: 34, height: 24}}
         />
         <Text
-          style={[styles.textMedium16, { marginHorizontal: 5, color: '#555' }]}>
+          style={[styles.textMedium16, {marginHorizontal: 5, color: '#555'}]}>
           School Test Lite
         </Text>
       </View>
     );
   };
 
-  const clearStackOptions = ({ navigation }) => ({
+  const clearStackOptions = ({navigation}) => ({
     title: '',
     headerLeft: () => {
       return <MainLogo />;
     },
     headerRight: () => {
       return (
-        <TouchableOpacity onPress={() => navigation.popToTop()}>
-          <HomeIcon width={26} height={26} />
-        </TouchableOpacity>
-      );
-    },
-  });
-
-  const screenOptions = ({ navigation }) => ({
-    headerTitle: () => {
-      return <MainLogo />;
-    },
-    headerRight: () => {
-      return (
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
-            style={{ marginLeft: 10 }}
+            style={{marginLeft: 10}}
             onPress={() => setModalVisible(!ModalVisible)}>
             <AdvertIcon width={26} height={26} />
           </TouchableOpacity>
-
           <TouchableOpacity
-            style={{ marginLeft: 10 }}
+            style={{marginLeft: 10}}
             onPress={() => navigation.popToTop()}>
             <HomeIcon width={26} height={26} />
           </TouchableOpacity>
@@ -228,7 +257,29 @@ const Navigator = () => {
     },
   });
 
-  const screenRename = ({ navigation }) => ({
+  const screenOptions = ({navigation}) => ({
+    headerTitle: () => {
+      return <MainLogo />;
+    },
+    headerRight: () => {
+      return (
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={{marginLeft: 10}}
+            onPress={() => setModalVisible(!ModalVisible)}>
+            <AdvertIcon width={26} height={26} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{marginLeft: 10}}
+            onPress={() => navigation.popToTop()}>
+            <HomeIcon width={26} height={26} />
+          </TouchableOpacity>
+        </View>
+      );
+    },
+  });
+
+  const screenRename = ({navigation}) => ({
     headerTitle: () => {
       return <MainLogo />;
     },
@@ -241,7 +292,7 @@ const Navigator = () => {
     },
   });
 
-  const AppNavigator = ({ navigation }) => {
+  const AppNavigator = ({navigation}) => {
     return (
       <Stack.Navigator>
         {checkUser === null && loadingUser === false ? (
@@ -249,12 +300,12 @@ const Navigator = () => {
             <Stack.Screen
               name="register"
               component={registerScreen}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="advert"
               component={advertScreen}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
           </>
         ) : checkUser !== null && loadingUser === false ? (
@@ -299,7 +350,7 @@ const Navigator = () => {
           <Stack.Screen
             name="loading"
             component={loadingScreen}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
         )}
       </Stack.Navigator>

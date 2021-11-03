@@ -25,6 +25,8 @@ import AdvertIcon from '../assets/images/icons/Vector.svg';
 import Advert2Icon from '../assets/images/icons/Vector2.svg';
 
 import { useRewardedAd } from '@react-native-admob/admob';
+// import Ads
+import BannerAds from '../components/bannerAds'
 
 const hookOptions = {
   loadOnDismissed: true,
@@ -84,7 +86,7 @@ const advertScreen = ({ navigation, route }) => {
     }
     getPrivilege()
   }, [])
-  console.log(privilege);
+  useEffect(() => { }, [ privilege]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -174,15 +176,7 @@ const advertScreen = ({ navigation, route }) => {
           </View>
         </View>
       </ImageBackground>
-      <View
-        style={{
-          backgroundColor: '#EEEEEE',
-          height: 50,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>Ads Area</Text>
-      </View>
+      <BannerAds />
     </SafeAreaView>
   );
 };

@@ -19,7 +19,8 @@ import {FlatGrid} from 'react-native-super-grid';
 
 // import รูปบ้าน
 import HomeIcon from '../assets/images/icons/HomeIcon.svg';
-
+// import Ads
+import BannerAds from '../components/bannerAds'
 import * as subGradeActions from '../store/actions/subGrade';
 
 const homeScreen = ({navigation}) => {
@@ -302,15 +303,7 @@ const homeScreen = ({navigation}) => {
           </View>
         </View>
       </ImageBackground>
-      <View
-        style={{
-          backgroundColor: '#EEEEEE',
-          height: 50,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>Ads Area</Text>
-      </View>
+      <BannerAds />
     </SafeAreaView>
   );
 };
