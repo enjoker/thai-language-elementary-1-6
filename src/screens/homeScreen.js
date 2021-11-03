@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Alert,
   ScrollView,
+  StyleSheet,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -16,48 +17,144 @@ import {
 import styles from '../styles/style';
 import {Input} from 'react-native-elements';
 import {FlatGrid} from 'react-native-super-grid';
+import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import รูปบ้าน
 import HomeIcon from '../assets/images/icons/HomeIcon.svg';
+// import Icon Advert
+import AdvertIcon from '../assets/images/icons/Vector.svg';
 // import Ads
-import BannerAds from '../components/bannerAds'
+import {useRewardedAd} from '@react-native-admob/admob';
+import BannerAds from '../components/bannerAds';
 import * as subGradeActions from '../store/actions/subGrade';
 
+const hookOptions = {
+  loadOnDismissed: true,
+  requestOptions: {
+    requestNonPersonalizedAdsOnly: true,
+  },
+};
 const homeScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const [privilegeVisible, setprivilegeVisible] = useState(false);
+  const [privilege, setprivilege] = useState();
+  const {adLoadError, adLoaded, reward, show} = useRewardedAd(
+    'ca-app-pub-3940256099942544/5224354917',
+    hookOptions,
+  );
+
+  useEffect(() => {
+    if (adLoadError) {
+      console.error(adLoadError);
+    }
+  }, [adLoadError]);
+  useEffect(() => {
+    if (reward) {
+      console.log(`Reward Earned: ${reward.type}`);
+    }
+  }, [reward]);
+  useEffect(() => {
+    if (reward) {
+      savePrivilege();
+    }
+  },[reward]);
+  const savePrivilege = async () => {
+    let sumPrivilege;
+    let test;
+    sumPrivilege = parseInt(privilege) + 2;
+    test = sumPrivilege.toString();
+    setprivilege(test);
+    await AsyncStorage.setItem('privilege', privilege);
+    console.log('สิทธิ์ที่เพิ่ม' + privilege);
+  };
+  useEffect(() => {
+    const getPrivilege = async () => {
+      try {
+        const currentPrivilege = await AsyncStorage.getItem('privilege');
+        setprivilege(currentPrivilege);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getPrivilege();
+  }, []);
+  console.log(privilege);
   const ContainerContent = () => {
-    const [items, setItems] = useState([
-      {
-        name: 'ป.1',
-        code: '#028c6a',
-        grade: 1,
-      },
-      {
-        name: 'ป.2',
-        code: '#1FA246',
-        grade: 35,
-      },
-      {
-        name: 'ป.3',
-        code: '#FFA73F',
-        grade: 36,
-      },
-      {
-        name: 'ป.4',
-        code: '#2E59F1',
-        grade: 37,
-      },
-      {
-        name: 'ป.5',
-        code: '#FF4E4E',
-        grade: 38,
-      },
-      {
-        name: 'ป.6',
-        code: '#B13AFA',
-        grade: 39,
-      },
-    ]);
+    const AdvertModal = () => {
+      return (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <View
+            style={[
+              styles.boxOvertime,
+              {backgroundColor: '#1FA246', borderRadius: 15},
+            ]}>
+            <Text
+              style={[
+                styles.textLight22,
+                {
+                  marginTop: 10,
+
+                  textAlign: 'center',
+                  color: '#FFFFFF',
+                },
+              ]}>
+              ท่านมีสิทธื์ในการดูเฉลยจำนวน
+            </Text>
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <Text
+                style={[
+                  styles.textRegular30,
+                  {
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    color: '#D7B641',
+                    marginHorizontal: 5,
+                  },
+                ]}>
+                {privilege}
+              </Text>
+              <Text
+                style={[
+                  styles.textLight22,
+                  {
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    color: '#FFFFFF',
+                    marginHorizontal: 5,
+                  },
+                ]}>
+                สิทธิ์
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                padding: 10,
+                marginBottom: 5,
+              }}>
+              <TouchableOpacity
+                style={{alignItems: 'center'}}
+                onPress={() => {
+                  setprivilegeVisible(false);
+                }}>
+                <Text style={[styles.textLight18, pageStyle.overTimeLeft]}>
+                  ยกเลิก
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{alignItems: 'center'}}
+                onPress={() => show()}>
+                <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
+                  กดดูโฆษณาเพื่อรับสิทธิ์เพิ่ม
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      );
+    };
     const gradeHandler = async classSelected => {
       let action;
       if (classSelected !== 0) {
@@ -268,6 +365,25 @@ const homeScreen = ({navigation}) => {
             กลับมาหน้าหลักนี้โดยการกดรูปบ้าน {'\n'}
             <HomeIcon width={26} height={26} /> ด้านบนขวาของแต่ละหน้า
           </Text>
+          <TouchableOpacity
+            style={{
+              margin: 10,
+              padding: 8,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              backgroundColor: '#37565b',
+              borderRadius: 10,
+            }}
+            onPress={() => setprivilegeVisible(!privilegeVisible)}>
+            <AdvertIcon width={26} height={26} />
+            <Text
+              style={[
+                styles.textLight18,
+                {textAlignVertical: 'center', marginLeft: 10, color: '#ffffff'},
+              ]}>
+              ดูโฆษณาเพื่อรับสิทธิ์ดูเฉลย
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity style={{alignItems: 'center'}}>
             <Text
               style={[
@@ -283,6 +399,9 @@ const homeScreen = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <Modal isVisible={privilegeVisible}>
+          <AdvertModal />
+        </Modal>
       </View>
     );
   };
@@ -307,5 +426,29 @@ const homeScreen = ({navigation}) => {
     </SafeAreaView>
   );
 };
+const pageStyle = StyleSheet.create({
+  overTimeLeft: {
+    backgroundColor: '#fff',
+    borderColor: '#D7B641',
+    color: '#D7B641',
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 10,
+    width: 100,
+    textAlignVertical: 'center',
+    textAlign: 'center',
+  },
+  overTimeRight: {
+    backgroundColor: '#D7B641',
+    borderColor: '#FFffff',
+    color: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 10,
+    flex: 1,
+    textAlignVertical: 'center',
+    textAlign: 'center',
+  },
+});
 
 export default homeScreen;

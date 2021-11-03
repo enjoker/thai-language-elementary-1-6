@@ -52,8 +52,8 @@ const advertScreen = ({ navigation, route }) => {
     } catch (error) {
       console.log(error);
     }
+    await AsyncStorage.setItem('privilege', privilege);
   };
-
   useEffect(() => {
     if (adLoadError) {
       console.error(adLoadError);
@@ -86,7 +86,7 @@ const advertScreen = ({ navigation, route }) => {
     }
     getPrivilege()
   }, [])
-  useEffect(() => { }, [ privilege]);
+  useEffect(() => { }, [privilege]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

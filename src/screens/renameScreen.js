@@ -10,8 +10,8 @@ import BannerAds from '../components/bannerAds'
 const renameScreen = ({ navigation }) => {
    const [name, setname] = useState()
 
-   const saveName = async () => {
-      await AsyncStorage.setItem('user', name);
+   const saveName = async () => {     
+      await AsyncStorage.setItem('user', name);  
       navigation.pop()
    }
 

@@ -18,6 +18,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 import {CommonActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import Icon Advert
+import AdvertIcon from '../assets/images/icons/Vector.svg';
 // import Ads
 import BannerAds from '../components/bannerAds';
 import {useRewardedAd} from '@react-native-admob/admob';
@@ -54,6 +56,7 @@ const scoreScreen = ({navigation, route}) => {
   const {width} = Dimensions.get('window');
   const [selectedQuestion, setselectedQuestion] = useState(false);
   const [ModalVisible, setmodalVisible] = useState(false);
+  const [privilegeVisible, setprivilegeVisible] = useState(false);
   const [sendScoreStatus, setsendScoreStatus] = useState(false);
   const [amountAnsUser, setamountAnsUser] = useState(0);
   const [showLevel, setshowLevel] = useState(true);
@@ -75,43 +78,45 @@ const scoreScreen = ({navigation, route}) => {
   useEffect(() => {
     if (reward) {
       console.log(`Reward Earned: ${reward.type}`);
-      savePrivilege();
+      // savePrivilege();
     }
-  }, [reward]);
+  }, [reward]);  
 
-  const savePrivilege = async () => {
-    let sumPrivilege;
-    let test;
-    sumPrivilege = parseInt(privilege) + 2;
-    test = sumPrivilege.toString();
-    setprivilege(test);
-    await AsyncStorage.setItem('privilege', privilege);
-    console.log('สิทธิ์ที่เพิ่ม' + privilege);
-  };
-  const usePrivilege = async () => {
-    let sumPrivilege;
-    let test;
-    sumPrivilege = parseInt(privilege) - 1;
-    test = sumPrivilege.toString();
-    setprivilege(test);
-    await AsyncStorage.setItem('privilege', privilege);
-    console.log('ข้างในสิทธิ์ที่ถูกลบ' + privilege);
-  }; 
-  console.log('ข้างนอกสิทธิ์ที่ถูกลบ' + privilege);
-
+  // const savePrivilege = async () => {
+  //   let sumPrivilege;
+  //   let test;
+  //   sumPrivilege = parseInt(privilege) + 2;
+  //   test = sumPrivilege.toString();
+  //   setprivilege(test);
+  //   console.log('เดิม' + privilege);
+  //   await AsyncStorage.setItem('privilege', privilege);
+  //   console.log('สิทธิ์ที่เพิ่ม' + privilege);    
+  // };
+  // const usePrivilege = async () => {
+  //   let sumPrivilege;
+  //   let test;
+  //   sumPrivilege = parseInt(privilege) - 1;
+  //   test = sumPrivilege.toString();
+  //   setprivilege(test);
+  //   await AsyncStorage.setItem('privilege', privilege);
+  //   console.log('ข้างในสิทธิ์ที่ถูกลบ' + privilege);
+  // };
+  // console.log('ข้างนอกสิทธิ์ที่ถูกลบ' + privilege);  
+  
   useEffect(() => {
     const getPrivilege = async () => {
       try {
         const currentPrivilege = await AsyncStorage.getItem('privilege');
+        if(currentPrivilege !== null && currentPrivilege !== ''){
         setprivilege(currentPrivilege);
+      }
       } catch (error) {
         console.log(error);
       }
     };
     getPrivilege();
   }, []);
-  console.log(privilege);
-  useEffect(() => {}, [privilege]);
+  console.log(privilege); 
 
   let correctAnswerCount = 0;
   let wrongAnswerCount = 0;
@@ -303,6 +308,120 @@ const scoreScreen = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
         </View>
+      </View>
+    );
+  };
+  const AdvertModal = () => {
+    return (
+      <View style={{flex: 1, justifyContent: 'center'}}>
+        <View
+          style={[
+            styles.boxOvertime,
+            {backgroundColor: '#1FA246', borderRadius: 15},
+          ]}>
+          <Text
+            style={[
+              styles.textLight22,
+              {
+                marginTop: 10,
+
+                textAlign: 'center',
+                color: '#FFFFFF',
+              },
+            ]}>
+            ท่านมีสิทธื์ในการดูเฉลยจำนวน
+          </Text>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <Text
+              style={[
+                styles.textRegular30,
+                {
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  color: '#D7B641',
+                  marginHorizontal: 5,
+                },
+              ]}>
+              {privilege}
+            </Text>
+            <Text
+              style={[
+                styles.textLight22,
+                {
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  color: '#FFFFFF',
+                  marginHorizontal: 5,
+                },
+              ]}>
+              สิทธิ์
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              padding: 10,
+              marginBottom: 5,
+            }}>
+            <TouchableOpacity
+              style={{alignItems: 'center'}}
+              onPress={() => {
+                setprivilegeVisible(false);
+              }}>
+              <Text style={[styles.textLight18, pageStyle.overTimeLeft]}>
+                ยกเลิก
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{alignItems: 'center'}}
+              onPress={() => show()}>
+              <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
+                กดดูโฆษณาเพื่อรับสิทธิ์เพิ่ม
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* <View
+          style={[
+            styles.boxOvertime,
+            {backgroundColor: '#D84315', borderRadius: 15},
+          ]}>
+          <Text
+            style={[
+              styles.textLight22,
+              {marginTop: 10, padding: 10, textAlign: 'center',color:'#FFFFFF'},
+            ]}>
+            สิทธิ์ในการดูเฉลยของท่านเหลือ 0
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              padding: 10,
+              marginBottom:10
+            }}>
+            <TouchableOpacity
+              style={{alignItems: 'center'}}
+              onPress={() => {
+                setModalVisible(false);
+              }}>
+              <Text style={[styles.textLight18, pageStyle.overTimeLeft]}>
+                ยกเลิก
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{alignItems: 'center'}}
+              onPress={() => {
+                setModalVisible(false);
+              }}>
+              <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
+                กดดูโฆษณาเพื่อรับ 2 สิทธิ์
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        */}
       </View>
     );
   };
@@ -796,16 +915,31 @@ const scoreScreen = ({navigation, route}) => {
                       </ScrollView>
                     </View>
                   )}
+                  <TouchableOpacity
+                    style={{
+                      marginTop: 10,
+                      padding:8,
+                      flexDirection: 'row',
+                      flex: 1,
+                      justifyContent: 'center',
+                      backgroundColor:'#37565b',
+                      borderRadius:10,                      
+                    }}
+                    onPress={() => setprivilegeVisible(!privilegeVisible)}>
+                    <AdvertIcon width={26} height={26} />
+                    <Text style={[styles.textLight18,{textAlignVertical: 'center',marginLeft:10,color:'#ffffff'}]}>                      
+                      ดูโฆษณาเพื่อรับสิทธิ์ดูเฉลย
+                    </Text>
+                  </TouchableOpacity>
                   {showDetailScore ? (
                     <View
                       style={{
+                        flex: 1,
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 40,
-                        marginTop: 20,
                       }}>
                       <TouchableOpacity
-                        style={{alignItems: 'center', marginTop: 10}}
+                        style={{alignItems: 'center'}}
                         onPress={() =>
                           navigation.navigate('ranking', {
                             csgId: csgId,
@@ -842,7 +976,7 @@ const scoreScreen = ({navigation, route}) => {
                         marginTop: 20,
                       }}>
                       <TouchableOpacity
-                        style={{alignItems: 'center', marginTop: 10}}
+                        style={{alignItems: 'center'}}
                         onPress={() => setshowDetailScore(true)}>
                         <Text
                           style={[
@@ -863,7 +997,7 @@ const scoreScreen = ({navigation, route}) => {
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={{alignItems: 'center', marginTop: 10}}
+                        style={{alignItems: 'center'}}
                         onPress={() =>
                           navigation.dispatch(
                             CommonActions.reset({
@@ -905,6 +1039,9 @@ const scoreScreen = ({navigation, route}) => {
                 </View>
                 <Modal isVisible={ModalVisible}>
                   <AnswerModal />
+                </Modal>
+                <Modal isVisible={privilegeVisible}>
+                  <AdvertModal />
                 </Modal>
                 {/* <Modal isVisible={isWrongModalVisible}>
                 <WrongModel />
@@ -952,6 +1089,28 @@ const pageStyle = StyleSheet.create({
     marginRight: 10,
     fontWeight: 'bold',
     color: '#0036F3',
+  },
+  overTimeLeft: {
+    backgroundColor: '#fff',
+    borderColor: '#D7B641',
+    color: '#D7B641',
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 10,
+    width: 100,
+    textAlignVertical: 'center',
+    textAlign: 'center',
+  },
+  overTimeRight: {
+    backgroundColor: '#D7B641',
+    borderColor: '#FFffff',
+    color: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 10,
+    flex: 1,
+    textAlignVertical: 'center',
+    textAlign: 'center',
   },
 });
 

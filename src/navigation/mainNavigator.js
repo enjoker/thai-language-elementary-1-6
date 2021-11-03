@@ -104,121 +104,7 @@ const Navigator = () => {
     };
     getUser();
   }, []);
-
-  const AdvertModal = () => {
-    return (
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        <View
-          style={[
-            styles.boxOvertime,
-            {backgroundColor: '#1FA246', borderRadius: 15},
-          ]}>
-          <Text
-            style={[
-              styles.textLight22,
-              {
-                marginTop: 10,
-
-                textAlign: 'center',
-                color: '#FFFFFF',
-              },
-            ]}>
-            ท่านมีสิทธื์ในการดูเฉลยจำนวน
-          </Text>
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <Text
-              style={[
-                styles.textRegular30,
-                {
-                  textAlign: 'center',
-                  textAlignVertical: 'center',
-                  color: '#D7B641',
-                  marginHorizontal: 5,
-                },
-              ]}>
-              {privilege}
-            </Text>
-            <Text
-              style={[
-                styles.textLight22,
-                {
-                  textAlign: 'center',
-                  textAlignVertical: 'center',
-                  color: '#FFFFFF',
-                  marginHorizontal: 5,
-                },
-              ]}>
-              สิทธิ์
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              padding: 10,
-              marginBottom: 5,
-            }}>
-            <TouchableOpacity
-              style={{alignItems: 'center'}}
-              onPress={() => {
-                setModalVisible(false);
-              }}>
-              <Text style={[styles.textLight18, pageStyle.overTimeLeft]}>
-                ยกเลิก
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{alignItems: 'center'}}
-              onPress={() => show()}>
-              <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
-                กดดูโฆษณาเพื่อรับสิทธิ์เพิ่ม
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* <View
-          style={[
-            styles.boxOvertime,
-            {backgroundColor: '#D84315', borderRadius: 15},
-          ]}>
-          <Text
-            style={[
-              styles.textLight22,
-              {marginTop: 10, padding: 10, textAlign: 'center',color:'#FFFFFF'},
-            ]}>
-            สิทธิ์ในการดูเฉลยของท่านเหลือ 0
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              padding: 10,
-              marginBottom:10
-            }}>
-            <TouchableOpacity
-              style={{alignItems: 'center'}}
-              onPress={() => {
-                setModalVisible(false);
-              }}>
-              <Text style={[styles.textLight18, pageStyle.overTimeLeft]}>
-                ยกเลิก
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{alignItems: 'center'}}
-              onPress={() => {
-                setModalVisible(false);
-              }}>
-              <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
-                กดดูโฆษณาเพื่อรับ 2 สิทธิ์
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        */}
-      </View>
-    );
-  };
+  
   const MainLogo = () => {
     return (
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -241,12 +127,7 @@ const Navigator = () => {
     },
     headerRight: () => {
       return (
-        <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            style={{marginLeft: 10}}
-            onPress={() => setModalVisible(!ModalVisible)}>
-            <AdvertIcon width={26} height={26} />
-          </TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>          
           <TouchableOpacity
             style={{marginLeft: 10}}
             onPress={() => navigation.popToTop()}>
@@ -263,12 +144,7 @@ const Navigator = () => {
     },
     headerRight: () => {
       return (
-        <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            style={{marginLeft: 10}}
-            onPress={() => setModalVisible(!ModalVisible)}>
-            <AdvertIcon width={26} height={26} />
-          </TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>          
           <TouchableOpacity
             style={{marginLeft: 10}}
             onPress={() => navigation.popToTop()}>
@@ -359,10 +235,7 @@ const Navigator = () => {
 
   return (
     <NavigationContainer>
-      <AppNavigator />
-      <Modal isVisible={ModalVisible}>
-        <AdvertModal />
-      </Modal>
+      <AppNavigator />      
     </NavigationContainer>
   );
 };
