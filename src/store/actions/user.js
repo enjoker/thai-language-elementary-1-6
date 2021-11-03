@@ -42,11 +42,38 @@ export const getPrivilege = () => {
    }
 }
 
-export const addPrivilege = (amountPrivilege) => {
+export const newPrivilege = () => {
    return async (dispatch, getState) => {
       try {
-         await AsyncStorage.setItem('privilege',amountPrivilege)
-         dispatch({ type: USER_PRIVILEGE, userPrivilege: amountPrivilege });
+         await AsyncStorage.setItem('privilege', '3')
+         dispatch({ type: USER_PRIVILEGE, userPrivilege: 3 });
+      } catch (error) {
+         console.log(error)
+      }
+   }
+}
+
+export const addPrivilege = () => {
+   return async (dispatch, getState) => {
+      try {
+         const getUserPrivilege = await AsyncStorage.getItem('privilege');
+         const countPrivilege = parseInt(getUserPrivilege) + 2;
+         await AsyncStorage.setItem('privilege', countPrivilege.toString())
+         dispatch({ type: USER_PRIVILEGE, userPrivilege: countPrivilege });
+      } catch (error) {
+         console.log(error)
+      }
+   }
+}
+
+export const removePrivilege = () => {
+   return async (dispatch, getState) => {
+      try {
+         const getUserPrivilege = await AsyncStorage.getItem('privilege');
+         const countPrivilege = parseInt(getUserPrivilege)
+         const sumPrivilege = countPrivilege > 0 ? countPrivilege - 1 : 0;
+         await AsyncStorage.setItem('privilege', sumPrivilege.toString())
+         dispatch({ type: USER_PRIVILEGE, userPrivilege: sumPrivilege });
       } catch (error) {
          console.log(error)
       }

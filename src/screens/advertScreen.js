@@ -1,43 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
   ImageBackground,
   TouchableOpacity,
-  SafeAreaView,
-  Alert,
-  ScrollView,
+  SafeAreaView
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
 import styles from '../styles/style';
-import { Input } from 'react-native-elements';
-import { FlatGrid } from 'react-native-super-grid';
-import { getCoures } from '../functions/functions';
 import * as userActions from '../store/actions/user';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// import รูปบ้าน
-import HomeIcon from '../assets/images/icons/HomeIcon.svg';
+
+// import Icon
 import AdvertIcon from '../assets/images/icons/Vector.svg';
 import Advert2Icon from '../assets/images/icons/Vector2.svg';
 
-import { useRewardedAd } from '@react-native-admob/admob';
 // import Ads
-import BannerAds from '../components/bannerAds'
+import { useRewardedAd } from '@react-native-admob/admob';
+import BannerAds from '../components/bannerAds';
 
 const hookOptions = {
-  loadOnDismissed: true,
-  requestOptions: {
-    requestNonPersonalizedAdsOnly: true,
-  },
+  loadOnDismissed: true
 };
 
-const advertScreen = ({ navigation, route }) => {
+const advertScreen = ({ route }) => {
   const dispatch = useDispatch();
-  const [privilege, setprivilege] = useState();
+  const privilege = useSelector(state => state.user.userPrivilege)
   const { username } = route.params;
   const {
     adLoadError,
@@ -52,7 +39,6 @@ const advertScreen = ({ navigation, route }) => {
     } catch (error) {
       console.log(error);
     }
-    await AsyncStorage.setItem('privilege', privilege);
   };
   useEffect(() => {
     if (adLoadError) {
@@ -68,45 +54,17 @@ const advertScreen = ({ navigation, route }) => {
   }, [reward]);
 
   const savePrivilege = async () => {
-    let sumPrivilege;
-    let toStrPrivilege;
-    sumPrivilege = parseInt(privilege) + 2;
-    toStrPrivilege = sumPrivilege.toString();
-    setprivilege(toStrPrivilege);
-    if (toStrPrivilege != null && toStrPrivilege != '') {
-      await AsyncStorage.setItem('privilege', toStrPrivilege);
-      console.log('สิทธิ์ที่เพิ่ม' + toStrPrivilege);
-    }
+    dispatch(userActions.addPrivilege());
   };
-  useEffect(() => {
-    const getPrivilege = async () => {
-      try {
-        const currentPrivilege = await AsyncStorage.getItem('privilege')
-        setprivilege(currentPrivilege)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    getPrivilege()
-  }, [])
+
   useEffect(() => { }, [privilege]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground style={{ flex: 1, backgroundColor: '#ffffff' }}>
-        <View
-          style={{
-            padding: 15,
-            paddingBottom: 0,
-            marginBottom: 10,
-            flex: 1,
-          }}>
+        <View style={{ padding: 15, paddingBottom: 0, marginBottom: 10, flex: 1 }}>
           <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text
-              style={[
-                styles.textMedium20,
-                { textAlign: 'center', color: '#333333' },
-              ]}>
+            <Text style={[styles.textMedium20, { textAlign: 'center', color: '#333333' }]}>
               ท่านได้รับสิทธิ์ดูเฉลยคำตอบจำนวน
             </Text>
             <View style={{ margin: 5 }}>
@@ -123,16 +81,12 @@ const advertScreen = ({ navigation, route }) => {
               }}>
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <Advert2Icon width={26} height={26} style={{ marginHorizontal: 5 }} />
-                <Text
-                  style={[
-                    styles.textLight20,
-                    { marginHorizontal: 5, color: '#ffffff' },
-                  ]}>
+                <Text style={[styles.textLight20, { marginHorizontal: 5, color: '#ffffff' }]}>
                   กดดูโฆษณาเพื่อรับสิทธิ์เพิ่ม
                 </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={register}
+            <TouchableOpacity onPress={() => register()}
               style={{
                 alignItems: 'center',
                 padding: 10,
@@ -141,38 +95,21 @@ const advertScreen = ({ navigation, route }) => {
                 borderWidth: 1,
                 borderColor: '#C4C4C4',
               }}>
-              <Text
-                style={[
-                  styles.textLight20,
-                  { marginHorizontal: 5, color: '#0036F3' },
-                ]}>
+              <Text style={[styles.textLight20, { marginHorizontal: 5, color: '#0036F3' }]}>
                 ไปหน้าหลัก
               </Text>
             </TouchableOpacity>
-
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text
-                style={[
-                  styles.textLight20,
-                  { marginHorizontal: 5, color: '#333333' },
-                ]}>
+              <Text style={[styles.textLight20, { marginHorizontal: 5, color: '#333333' }]}>
                 ท่านสามารถกดรับสิทธิ์เพิ่มได้เมื่อ
               </Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text
-                style={[
-                  styles.textLight20,
-                  { marginHorizontal: 5, color: '#333333' },
-                ]}>
+              <Text style={[styles.textLight20, { marginHorizontal: 5, color: '#333333' }]}>
                 สัญลักษณ์นี้{ }
               </Text>
               <AdvertIcon width={26} height={26} style={{ marginHorizontal: 5 }} />
-              <Text
-                style={[
-                  styles.textLight20,
-                  { marginHorizontal: 5, color: '#333333' },
-                ]}>
+              <Text style={[styles.textLight20, { marginHorizontal: 5, color: '#333333' }]}>
                 ปรากฎด้านบน
               </Text>
             </View>

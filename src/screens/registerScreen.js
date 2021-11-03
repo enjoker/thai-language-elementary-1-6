@@ -35,18 +35,13 @@ const registerScreen = ({ navigation }) => {
 
   const ContainerContent = () => {
     const [name, setname] = useState();
-    const [privilege, setprivilege] = useState('30');
     const dispatch = useDispatch();
 
-    const advertPrivilege = async userName => {
-      console.log(privilege);
-      try {
-        dispatch(userActions.addPrivilege(privilege));
-      } catch (error) {
-        console.log(error);
-      }
-      navigation.navigate('advert', { username: userName })
+    const advertPrivilege = async () => {
+      dispatch(userActions.newPrivilege());
+      navigation.navigate('advert', { username: name })
     };
+
     useEffect(() => { }, [name, privilege]);
 
     return (
@@ -95,7 +90,7 @@ const registerScreen = ({ navigation }) => {
               width: 100,
             },
           ]}
-          onPress={() => advertPrivilege(name)}>
+          onPress={() => advertPrivilege()}>
           ตกลง
         </Text>
       </View>

@@ -91,13 +91,14 @@ const Navigator = () => {
   //   getPrivilege();
   // }, []);
   // console.log(privilege);
-  // useEffect(() => {}, [privilege]);
+  // useEffect(() => {}, [privilege]); o6888888888888888888888
 
   useEffect(() => {
     const getUser = async () => {
       try {
         dispatch(userActions.getUser());
-       // await AsyncStorage.removeItem('user')
+      //  await AsyncStorage.removeItem('user')
+      //  await AsyncStorage.removeItem('privilege')
       } catch (error) {
         console.log(error);
       }
