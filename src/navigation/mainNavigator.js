@@ -3,17 +3,8 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  Image,
-  Icon,
-  Avatar,
-  normalize,
-  Card,
-  Input,
-} from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import styles from '../styles/style';
-import Modal from 'react-native-modal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -24,7 +15,7 @@ import * as userActions from '../store/actions/user';
 // import Icon.SVG
 import RenameIcon from '../assets/images/icons/rename_icon.svg';
 import HomeIcon from '../assets/images/icons/HomeIcon.svg';
-import AdvertIcon from '../assets/images/icons/Vector.svg';
+// import AdvertIcon from '../assets/images/icons/Vector.svg';
 
 //import Screen
 import registerScreen from '../screens/registerScreen';
@@ -38,7 +29,7 @@ import scoreScreen from '../screens/scoreScreen';
 import rankingScreen from '../screens/rankingScreen';
 import advertScreen from '../screens/advertScreen';
 
-import {useRewardedAd} from '@react-native-admob/admob';
+// import {useRewardedAd} from '@react-native-admob/admob';
 
 const hookOptions = {
   loadOnDismissed: true,
@@ -52,8 +43,8 @@ const Navigator = () => {
   const checkUser = useSelector(state => state.user.userName);
   const loadingUser = useSelector(state => state.user.loadingUser);
   const Stack = createNativeStackNavigator();
-  const [ModalVisible, setModalVisible] = useState(false);
-  const [privilege, setprivilege] = useState();
+  // const [ModalVisible, setModalVisible] = useState(false);
+  // const [privilege, setprivilege] = useState();
   // const {adLoadError, adLoaded, reward, show} = useRewardedAd(
   //   'ca-app-pub-3940256099942544/5224354917',
   //   hookOptions,
@@ -91,7 +82,7 @@ const Navigator = () => {
   //   getPrivilege();
   // }, []);
   // console.log(privilege);
-  // useEffect(() => {}, [privilege]); o6888888888888888888888
+  // useEffect(() => {}, [privilege]);
 
   useEffect(() => {
     const getUser = async () => {
