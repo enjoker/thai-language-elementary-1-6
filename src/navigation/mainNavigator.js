@@ -54,50 +54,50 @@ const Navigator = () => {
   const Stack = createNativeStackNavigator();
   const [ModalVisible, setModalVisible] = useState(false);
   const [privilege, setprivilege] = useState();
-  const {adLoadError, adLoaded, reward, show} = useRewardedAd(
-    'ca-app-pub-3940256099942544/5224354917',
-    hookOptions,
-  );
-  useEffect(() => {
-    if (adLoadError) {
-      console.error(adLoadError);
-    }
-  }, [adLoadError]);
+  // const {adLoadError, adLoaded, reward, show} = useRewardedAd(
+  //   'ca-app-pub-3940256099942544/5224354917',
+  //   hookOptions,
+  // );
+  // useEffect(() => {
+  //   if (adLoadError) {
+  //     console.error(adLoadError);
+  //   }
+  // }, [adLoadError]);
 
-  useEffect(() => {
-    if (reward) {
-      console.log(`Reward Earned: ${reward.type}`);
-      savePrivilege();
-    }
-  }, [reward]);
+  // useEffect(() => {
+  //   if (reward) {
+  //     console.log(`Reward Earned: ${reward.type}`);
+  //     savePrivilege();
+  //   }
+  // }, [reward]);
 
-  const savePrivilege = async () => {
-    let sumPrivilege;
-    let test;
-    sumPrivilege = parseInt(privilege) + 2;
-    test = sumPrivilege.toString();
-    setprivilege(test);
-    await AsyncStorage.setItem('privilege', privilege);
-  };
-  useEffect(() => {
-    const getPrivilege = async () => {
-      try {
-        const currentPrivilege = await AsyncStorage.getItem('privilege');
-        setprivilege(currentPrivilege);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getPrivilege();
-  }, []);
-  console.log(privilege);
-  useEffect(() => {}, [privilege]);
+  // const savePrivilege = async () => {
+  //   let sumPrivilege;
+  //   let test;
+  //   sumPrivilege = parseInt(privilege) + 2;
+  //   test = sumPrivilege.toString();
+  //   setprivilege(test);
+  //   await AsyncStorage.setItem('privilege', privilege);
+  // };
+  // useEffect(() => {
+  //   const getPrivilege = async () => {
+  //     try {
+  //       const currentPrivilege = await AsyncStorage.getItem('privilege');
+  //       setprivilege(currentPrivilege);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getPrivilege();
+  // }, []);
+  // console.log(privilege);
+  // useEffect(() => {}, [privilege]);
 
   useEffect(() => {
     const getUser = async () => {
       try {
         dispatch(userActions.getUser());
-        //await AsyncStorage.removeItem('user')
+       // await AsyncStorage.removeItem('user')
       } catch (error) {
         console.log(error);
       }

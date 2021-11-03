@@ -52,22 +52,22 @@ const homeScreen = ({navigation}) => {
   useEffect(() => {
     if (reward) {
       console.log(`Reward Earned: ${reward.type}`);
-    }
-  }, [reward]);
-  useEffect(() => {
-    if (reward) {
       savePrivilege();
     }
-  },[reward]);
+  }, [reward]);
+
   const savePrivilege = async () => {
     let sumPrivilege;
-    let test;
+    let toStrPrivilege;
     sumPrivilege = parseInt(privilege) + 2;
-    test = sumPrivilege.toString();
-    setprivilege(test);
-    await AsyncStorage.setItem('privilege', privilege);
-    console.log('สิทธิ์ที่เพิ่ม' + privilege);
+    toStrPrivilege = sumPrivilege.toString();
+    setprivilege(toStrPrivilege);
+    if (toStrPrivilege != null && toStrPrivilege != '') {
+      await AsyncStorage.setItem('privilege', toStrPrivilege);
+      console.log('สิทธิ์ที่เพิ่ม' + toStrPrivilege);
+    }
   };
+  console.log(privilege);
   useEffect(() => {
     const getPrivilege = async () => {
       try {
@@ -79,7 +79,7 @@ const homeScreen = ({navigation}) => {
     };
     getPrivilege();
   }, []);
-  console.log(privilege);
+
   const ContainerContent = () => {
     const AdvertModal = () => {
       return (

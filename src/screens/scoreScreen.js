@@ -78,20 +78,22 @@ const scoreScreen = ({navigation, route}) => {
   useEffect(() => {
     if (reward) {
       console.log(`Reward Earned: ${reward.type}`);
-      // savePrivilege();
+      savePrivilege();
     }
   }, [reward]);  
 
-  // const savePrivilege = async () => {
-  //   let sumPrivilege;
-  //   let test;
-  //   sumPrivilege = parseInt(privilege) + 2;
-  //   test = sumPrivilege.toString();
-  //   setprivilege(test);
-  //   console.log('เดิม' + privilege);
-  //   await AsyncStorage.setItem('privilege', privilege);
-  //   console.log('สิทธิ์ที่เพิ่ม' + privilege);    
-  // };
+  const savePrivilege = async () => {
+    let sumPrivilege;
+    let toStrPrivilege;
+    sumPrivilege = parseInt(privilege) + 2;
+    toStrPrivilege = sumPrivilege.toString();
+    setprivilege(toStrPrivilege);
+    if (toStrPrivilege != null && toStrPrivilege != '') {
+      await AsyncStorage.setItem('privilege', toStrPrivilege);
+      console.log('สิทธิ์ที่เพิ่ม' + toStrPrivilege);
+    }
+  };
+  console.log(privilege);
   // const usePrivilege = async () => {
   //   let sumPrivilege;
   //   let test;

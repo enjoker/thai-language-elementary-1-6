@@ -69,12 +69,15 @@ const advertScreen = ({ navigation, route }) => {
 
   const savePrivilege = async () => {
     let sumPrivilege;
-    let test;
-    sumPrivilege = parseInt(privilege) + 2
-    test = sumPrivilege.toString();
-    setprivilege(test)
-    await AsyncStorage.setItem('privilege', privilege);
-  }
+    let toStrPrivilege;
+    sumPrivilege = parseInt(privilege) + 2;
+    toStrPrivilege = sumPrivilege.toString();
+    setprivilege(toStrPrivilege);
+    if (toStrPrivilege != null && toStrPrivilege != '') {
+      await AsyncStorage.setItem('privilege', toStrPrivilege);
+      console.log('สิทธิ์ที่เพิ่ม' + toStrPrivilege);
+    }
+  };
   useEffect(() => {
     const getPrivilege = async () => {
       try {
