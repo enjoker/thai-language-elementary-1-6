@@ -42,7 +42,7 @@ const registerScreen = ({ navigation }) => {
       navigation.navigate('advert', { username: name })
     };
 
-    useEffect(() => { }, [name, privilege]);
+    useEffect(() => { }, [name]);
 
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

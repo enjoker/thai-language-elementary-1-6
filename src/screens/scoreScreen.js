@@ -60,6 +60,7 @@ const scoreScreen = ({ navigation, route }) => {
   const [selectedQuestion, setselectedQuestion] = useState(false);
   const [ModalVisible, setmodalVisible] = useState(false);
   const [privilegeVisible, setprivilegeVisible] = useState(false);
+  const [privilegeVisible2, setprivilegeVisible2] = useState(false);
   const [sendScoreStatus, setsendScoreStatus] = useState(false);
   const [amountAnsUser, setamountAnsUser] = useState(0);
   const [showLevel, setshowLevel] = useState(true);
@@ -122,7 +123,7 @@ const scoreScreen = ({ navigation, route }) => {
         setselectedQuestion({ index, answerResult });
         setmodalVisible(!ModalVisible);
       } else {
-        setprivilegeVisible(!privilegeVisible)
+        setprivilegeVisible2(!privilegeVisible2)
       }
     } else {
       setselectedQuestion({ index, answerResult });
@@ -377,8 +378,14 @@ const scoreScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-        {/* <View
+        </View>        
+      </View>
+    );
+  };
+  const AdvertModal2 = () => {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center' }}>        
+         <View
           style={[
             styles.boxOvertime,
             {backgroundColor: '#D84315', borderRadius: 15},
@@ -400,7 +407,7 @@ const scoreScreen = ({ navigation, route }) => {
             <TouchableOpacity
               style={{alignItems: 'center'}}
               onPress={() => {
-                setModalVisible(false);
+                setprivilegeVisible2(false);
               }}>
               <Text style={[styles.textLight18, pageStyle.overTimeLeft]}>
                 ยกเลิก
@@ -408,16 +415,13 @@ const scoreScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{alignItems: 'center'}}
-              onPress={() => {
-                setModalVisible(false);
-              }}>
+              onPress={() => show()}>
               <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
                 กดดูโฆษณาเพื่อรับ 2 สิทธิ์
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-        */}
+        </View>        
       </View>
     );
   };
@@ -943,6 +947,9 @@ const scoreScreen = ({ navigation, route }) => {
                 </Modal>
                 <Modal isVisible={privilegeVisible}>
                   <AdvertModal />
+                </Modal>
+                <Modal isVisible={privilegeVisible2}>
+                  <AdvertModal2 />
                 </Modal>
                 {/* <Modal isVisible={isWrongModalVisible}>
                 <WrongModel />

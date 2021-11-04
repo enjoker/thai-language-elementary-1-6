@@ -171,6 +171,7 @@ const optionTestScreen = ({navigation, route}) => {
       if (timeTestEasy !== null && questionSelected !== null && levelSelected == 1) {
         //console.log(timeTestEasy + 'ง่าย');
         settimeOut(questionSelected * timeTestEasy);
+        //settimeOut(10);
       } else if (timeTestMedium !== null && questionSelected !== null && levelSelected == 3) {
         //console.log(timeTestMedium + 'กลาง');       
         settimeOut(questionSelected * timeTestMedium);       
