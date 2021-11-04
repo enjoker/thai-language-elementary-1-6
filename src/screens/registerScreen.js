@@ -24,7 +24,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as userActions from '../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
-
+// import Ads
 import BannerAds from '../components/bannerAds'
 
 // import รูปบ้าน

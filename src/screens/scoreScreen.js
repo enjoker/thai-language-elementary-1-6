@@ -842,6 +842,8 @@ const scoreScreen = ({ navigation, route }) => {
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: 'space-between',
+                        marginBottom: 10,
+                        marginTop: 10,
                       }}>
                       <TouchableOpacity
                         style={{ alignItems: 'center' }}
@@ -877,8 +879,8 @@ const scoreScreen = ({ navigation, route }) => {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 40,
-                        marginTop: 20,
+                        marginBottom: 10,
+                        marginTop: 10,
                       }}>
                       <TouchableOpacity
                         style={{ alignItems: 'center' }}

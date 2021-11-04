@@ -42,47 +42,7 @@ const Navigator = () => {
   const dispatch = useDispatch();
   const checkUser = useSelector(state => state.user.userName);
   const loadingUser = useSelector(state => state.user.loadingUser);
-  const Stack = createNativeStackNavigator();
-  // const [ModalVisible, setModalVisible] = useState(false);
-  // const [privilege, setprivilege] = useState();
-  // const {adLoadError, adLoaded, reward, show} = useRewardedAd(
-  //   'ca-app-pub-3940256099942544/5224354917',
-  //   hookOptions,
-  // );
-  // useEffect(() => {
-  //   if (adLoadError) {
-  //     console.error(adLoadError);
-  //   }
-  // }, [adLoadError]);
-
-  // useEffect(() => {
-  //   if (reward) {
-  //     console.log(`Reward Earned: ${reward.type}`);
-  //     savePrivilege();
-  //   }
-  // }, [reward]);
-
-  // const savePrivilege = async () => {
-  //   let sumPrivilege;
-  //   let test;
-  //   sumPrivilege = parseInt(privilege) + 2;
-  //   test = sumPrivilege.toString();
-  //   setprivilege(test);
-  //   await AsyncStorage.setItem('privilege', privilege);
-  // };
-  // useEffect(() => {
-  //   const getPrivilege = async () => {
-  //     try {
-  //       const currentPrivilege = await AsyncStorage.getItem('privilege');
-  //       setprivilege(currentPrivilege);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getPrivilege();
-  // }, []);
-  // console.log(privilege);
-  // useEffect(() => {}, [privilege]);
+  const Stack = createNativeStackNavigator();  
 
   useEffect(() => {
     const getUser = async () => {
@@ -118,14 +78,11 @@ const Navigator = () => {
       return <MainLogo />;
     },
     headerRight: () => {
-      return (
-        <View style={{flexDirection: 'row'}}>          
-          <TouchableOpacity
-            style={{marginLeft: 10}}
+      return (     
+          <TouchableOpacity           
             onPress={() => navigation.popToTop()}>
             <HomeIcon width={26} height={26} />
-          </TouchableOpacity>
-        </View>
+          </TouchableOpacity>       
       );
     },
   });
@@ -135,14 +92,11 @@ const Navigator = () => {
       return <MainLogo />;
     },
     headerRight: () => {
-      return (
-        <View style={{flexDirection: 'row'}}>          
-          <TouchableOpacity
-            style={{marginLeft: 10}}
+      return (               
+          <TouchableOpacity            
             onPress={() => navigation.popToTop()}>
             <HomeIcon width={26} height={26} />
-          </TouchableOpacity>
-        </View>
+          </TouchableOpacity>   
       );
     },
   });
