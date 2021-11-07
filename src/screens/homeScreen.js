@@ -21,6 +21,7 @@ import { useRewardedAd } from '@react-native-admob/admob';
 import BannerAds from '../components/bannerAds';
 import * as subGradeActions from '../store/actions/subGrade';
 import * as userActions from '../store/actions/user';
+import { testRewardId, productionRewardId } from '../utilities/admob';
 
 const hookOptions = {
   loadOnDismissed: true,
@@ -32,10 +33,7 @@ const homeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const privilege = useSelector(state => state.user.userPrivilege)
   const [privilegeVisible, setprivilegeVisible] = useState(false);
-  const { adLoadError, adLoaded, reward, show } = useRewardedAd(
-    'ca-app-pub-3940256099942544/5224354917',
-    hookOptions,
-  );
+  const { adLoadError, adLoaded, reward, show } = useRewardedAd(testRewardId, hookOptions);
 
   const getPrivilege = useCallback(() => {
     dispatch(userActions.getPrivilege());

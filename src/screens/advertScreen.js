@@ -17,6 +17,7 @@ import Advert2Icon from '../assets/images/icons/Vector2.svg';
 // import Ads
 import { useRewardedAd } from '@react-native-admob/admob';
 import BannerAds from '../components/bannerAds';
+import { testRewardId, productionRewardId } from '../utilities/admob';
 
 const hookOptions = {
   loadOnDismissed: true
@@ -26,12 +27,7 @@ const advertScreen = ({ route }) => {
   const dispatch = useDispatch();
   const privilege = useSelector(state => state.user.userPrivilege)
   const { username } = route.params;
-  const {
-    adLoadError,
-    adLoaded,
-    reward,
-    show
-  } = useRewardedAd('ca-app-pub-3940256099942544/5224354917', hookOptions);
+  const { adLoadError, adLoaded, reward, show } = useRewardedAd(testRewardId, hookOptions);
 
   const register = async () => {
     try {

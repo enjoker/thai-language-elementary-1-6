@@ -23,10 +23,11 @@ import AdvertIcon from '../assets/images/icons/Vector.svg';
 // import Ads
 import BannerAds from '../components/bannerAds';
 import { useRewardedAd } from '@react-native-admob/admob';
+import { testRewardId, productionRewardId } from '../utilities/admob';
+
 // import Actions
 import * as scoreActions from '../store/actions/score';
 import * as userActions from '../store/actions/user';
-import userReducer from '../store/reducers/user';
 
 const hookOptions = {
   loadOnDismissed: true,
@@ -68,11 +69,8 @@ const scoreScreen = ({ navigation, route }) => {
   const [scoreLevel, setscoreLevel] = useState(0);
   const [sumScore, setsumScore] = useState(0);
   const [usePrivilegeStatus, setUsePrivilegeStatus] = useState(false)
-  const { adLoadError, adLoaded, reward, show } = useRewardedAd(
-    'ca-app-pub-3940256099942544/5224354917',
-    hookOptions,
-  );
-  
+  const { adLoadError, adLoaded, reward, show } = useRewardedAd(testRewardId, hookOptions);
+
   const savePrivilege = async () => {
     dispatch(userActions.addPrivilege());
   };
@@ -378,22 +376,22 @@ const scoreScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>        
+        </View>
       </View>
     );
   };
   const AdvertModal2 = () => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>        
-         <View
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View
           style={[
             styles.boxOvertime,
-            {backgroundColor: '#D84315', borderRadius: 15},
+            { backgroundColor: '#D84315', borderRadius: 15 },
           ]}>
           <Text
             style={[
               styles.textLight22,
-              {marginTop: 10, padding: 10, textAlign: 'center',color:'#FFFFFF'},
+              { marginTop: 10, padding: 10, textAlign: 'center', color: '#FFFFFF' },
             ]}>
             สิทธิ์ในการดูเฉลยของท่านเหลือ 0
           </Text>
@@ -402,10 +400,10 @@ const scoreScreen = ({ navigation, route }) => {
               flexDirection: 'row',
               justifyContent: 'space-around',
               padding: 10,
-              marginBottom:10
+              marginBottom: 10
             }}>
             <TouchableOpacity
-              style={{alignItems: 'center'}}
+              style={{ alignItems: 'center' }}
               onPress={() => {
                 setprivilegeVisible2(false);
               }}>
@@ -421,7 +419,7 @@ const scoreScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>        
+        </View>
       </View>
     );
   };
