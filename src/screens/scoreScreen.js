@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ImageModal from 'react-native-image-modal';
 // import Icon Advert
 import AdvertIcon from '../assets/images/icons/Vector.svg';
 // import Ads
@@ -254,6 +255,23 @@ const scoreScreen = ({ navigation, route }) => {
             ]}>
             คำถาม: {allQuestions[selectedQuestion.index].examQuestion}
           </Text>
+          {!answerResult && allQuestions[selectedQuestion.index].examPicAnswer !==
+            null &&
+            allQuestions[selectedQuestion.index].examPicAnswer !==
+            '' ? (
+            <View style={{ marginVertical: 5 }}>
+              <ImageModal              
+                modalImageResizeMode='contain'              
+                imageBackgroundColor="#ffffff"
+                style={{ width: 100, height: 100 }}
+                source={{
+                  uri:
+                    'https://api.test.schoolcare.app/getImg/getUploadFile?name=' +
+                    allQuestions[selectedQuestion.index].examPicAnswer.substr(8),
+                }}
+              />
+            </View>
+          ) : null}
           <View style={{ flexDirection: 'row', marginVertical: 10 }}>
             <Text
               style={[
@@ -413,7 +431,7 @@ const scoreScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ alignItems: 'center' }}
-              onPress={() => { show(); setprivilegeVisible2(false); }}>
+              onPress={() => show()}>
               <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
                 กดดูโฆษณาเพื่อรับ 2 สิทธิ์
               </Text>
@@ -428,7 +446,7 @@ const scoreScreen = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
         style={{ flex: 1 }}
-        source={require('../assets/images/Bg-one.png')}>
+        source={require('../assets/images/bg.jpg')}>
         <View
           style={{
             paddingHorizontal: 15,
@@ -840,8 +858,6 @@ const scoreScreen = ({ navigation, route }) => {
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 10,
-                        marginTop: 10,
                       }}>
                       <TouchableOpacity
                         style={{ alignItems: 'center' }}
@@ -877,8 +893,8 @@ const scoreScreen = ({ navigation, route }) => {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 10,
-                        marginTop: 10,
+                        marginBottom: 40,
+                        marginTop: 20,
                       }}>
                       <TouchableOpacity
                         style={{ alignItems: 'center' }}

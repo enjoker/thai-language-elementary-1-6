@@ -282,7 +282,7 @@ const testScreen = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
         style={{ flex: 1 }}
-        source={require('../assets/images/Bg-one.png')}>
+        source={require('../assets/images/bg.jpg')}>
         <View
           style={{
             padding: 15,
@@ -371,6 +371,7 @@ const testScreen = ({ navigation, route }) => {
                             {questionDetails[currentQuestion].examChoice.map(
                               (item, index) => {
                                 const choiceValue = findChoice(item);
+                                console.log(questionDetails);
                                 return (
                                   <View style={pageStyle.radioZone} key={index}>
                                     <RadioButton
