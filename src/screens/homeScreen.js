@@ -106,53 +106,20 @@ const homeScreen = ({ navigation }) => {
   const AdvertModal = () => {
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <View
-          style={[
-            styles.boxOvertime,
-            { backgroundColor: '#1FA246', borderRadius: 15 },
-          ]}>
-          <Text style={[styles.textLight22, {
-            marginTop: 10,
-            textAlign: 'center',
-            color: '#FFFFFF',
-          }]}>
+        <View style={[styles.boxOvertime, { backgroundColor: '#1FA246', borderRadius: 15 }]}>
+          <Text style={[styles.textLight22, { marginTop: 10, textAlign: 'center', color: '#FFFFFF' }]}>
             ท่านมีสิทธื์ในการดูเฉลยจำนวน
           </Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Text
-              style={[
-                styles.textRegular30,
-                {
-                  textAlign: 'center',
-                  textAlignVertical: 'center',
-                  color: '#D7B641',
-                  marginHorizontal: 5,
-                },
-              ]}>
+            <Text style={[styles.textRegular30, pageStyle.privilegePoint]}>
               {privilege}
             </Text>
-            <Text
-              style={[
-                styles.textLight22,
-                {
-                  textAlign: 'center',
-                  textAlignVertical: 'center',
-                  color: '#FFFFFF',
-                  marginHorizontal: 5,
-                },
-              ]}>
+            <Text style={[styles.textLight22, pageStyle.privilegeText]}>
               สิทธิ์
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              padding: 10,
-              marginBottom: 5,
-            }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 10, marginBottom: 5 }}>
             <TouchableOpacity
-
               style={{ alignItems: 'center' }}
               onPress={() => setprivilegeVisible(false)}>
               <Text style={[styles.textLight18, pageStyle.overTimeLeft]}>
@@ -322,6 +289,18 @@ const pageStyle = StyleSheet.create({
     textAlignVertical: 'center',
     textAlign: 'center',
   },
+  privilegePoint: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: '#D7B641',
+    marginHorizontal: 5
+  },
+  privilegeText: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: '#FFFFFF',
+    marginHorizontal: 5
+  }
 });
 
 export default homeScreen;
