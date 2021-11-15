@@ -145,7 +145,6 @@ const rankingScreen = ({ navigation, route }) => {
               </View>
               <View
                 style={{
-                  flex: 0.5,
                   marginTop: 50,
                 }}>
                 <Text style={[styles.textMedium20, { textAlign: 'center', color: '#FFFFFF' }]}>

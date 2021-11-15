@@ -126,12 +126,11 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.tncclever.testAdsThai" //<-- ทดสอบ Ads
-        // applicationId "com.tncclever.thai_language_elementary_1_6"
+        applicationId "com.tncclever.thai_language_elementary_1_6"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "1.0.1"
+        versionCode 6
+        versionName "1.0.3"
     }
     splits {
         abi {
@@ -196,7 +195,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:0.65.1"  // From node_modules
-
+    implementation 'com.google.android.gms:play-services-ads:20.4.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

@@ -29,3 +29,5 @@ export const getSubAndTimeGrade6 = () => {
 export const sendReport = () => {
   return baseURL + 'report-no-auth/create';
 }
+
+export const adsWaitingTime = 120;

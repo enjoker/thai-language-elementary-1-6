@@ -32,21 +32,16 @@ import BannerAds from '../components/bannerAds'
 import HomeIcon from '../assets/images/icons/HomeIcon.svg';
 
 const registerScreen = ({ navigation }) => {
-  const { width } = Dimensions.get('window');
-
   const ContainerContent = () => {
     const [name, setname] = useState();
     const dispatch = useDispatch();
 
     const advertPrivilege = async () => {
-      console.log(name);
       if (name == '' || name == undefined || name == null) {
-        Alert.alert('แจ้งเตือน', 'กรุณาใส่ชื่อผู้ใช้งาน', [{text: 'ยืนยัน'}]);
-        console.log('if');
+        Alert.alert('แจ้งเตือน', 'กรุณาใส่ชื่อผู้ใช้งาน', [{ text: 'ยืนยัน' }]);
       } else {
         dispatch(userActions.newPrivilege());
-        navigation.navigate('advert', {username: name});
-        console.log('else');
+        navigation.navigate('advert', { username: name });
       }
     };
 

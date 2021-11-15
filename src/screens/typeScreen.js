@@ -12,7 +12,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import styles from '../styles/style';
-import {Image, Icon, Avatar, normalize, Card} from 'react-native-elements';
+import AllDownload from '../components/allDownload';
 import {useDispatch, useSelector} from 'react-redux';
 // import Ads
 import BannerAds from '../components/bannerAds';
@@ -134,20 +134,7 @@ const typeScreen = ({navigation}) => {
           <ScrollView style={{flex: 1}}>
             <ContainerContent />
           </ScrollView>
-          <TouchableOpacity style={{alignItems: 'center'}}>
-            <Text
-              style={[
-                styles.textLight20,
-                {
-                  padding: 10,
-                  borderRadius: 8,
-                  backgroundColor: '#FAFE2F',
-                  color: '#6E7015',
-                },
-              ]}>
-              ดาวน์โหลดวิชาอื่น ๆ กดตรงนี้
-            </Text>
-          </TouchableOpacity>
+          <AllDownload/>
         </View>
       </ImageBackground>
       <BannerAds />
