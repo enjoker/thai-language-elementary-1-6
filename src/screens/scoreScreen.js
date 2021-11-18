@@ -203,9 +203,12 @@ const scoreScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    sendScore();
     checkAdsTime();
   }, [privilege]);
+
+  useEffect(() => {
+    sendScore();
+  }, []);
 
   useEffect(() => {
     if (adsTimeStamp) {
