@@ -1,35 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Dimensions,
-  Alert
-} from 'react-native';
+import { View, Text, SafeAreaView, Alert } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import styles from '../styles/style';
-import {
-  Image,
-  Icon,
-  Avatar,
-  normalize,
-  Card,
-  Input,
-} from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image, Input } from 'react-native-elements';
 import * as userActions from '../store/actions/user';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // import Ads
 import BannerAds from '../components/bannerAds'
-
-// import รูปบ้าน
-import HomeIcon from '../assets/images/icons/HomeIcon.svg';
 
 const registerScreen = ({ navigation }) => {
   const ContainerContent = () => {
